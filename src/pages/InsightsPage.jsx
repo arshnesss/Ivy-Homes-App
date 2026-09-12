@@ -32,7 +32,8 @@ export const InsightsPage = () => {
     { id: 12, category: 'timestamps', endpoint: '*', doc: 'Timestamps are ISO 8601 with UTC Z suffix', actual: 'Timestamps are naive ISO strings without Z suffix or timezone offset' },
     { id: 13, category: 'duplicates', endpoint: '/v1/listings', doc: 'Each listing_id corresponds to 1 physical property', actual: '19 duplicate clusters (38 records) describe identical physical properties across agencies' },
     { id: 14, category: 'data_quality', endpoint: '/v1/listings', doc: 'Invalid or corrupt listings excluded server-side', actual: '41 listing records contain physical impossibilities (floor > total_floors, negative prices, swapped lat/long)' },
-    { id: 15, category: 'fraud', endpoint: '/v1/listings', doc: 'Contains genuine sale listings', actual: '11 bait/fake listings have monthly rental amounts listed as sale prices' }
+    { id: 15, category: 'fraud', endpoint: '/v1/listings', doc: 'Contains genuine sale listings', actual: '11 bait/fake listings have monthly rental amounts listed as sale prices' },
+    { id: 16, category: 'missing_endpoint', endpoint: '/v1/listings/{id}/similar', doc: 'GET /v1/listings/{id}/similar returns up to 10 comparable listings', actual: 'Endpoint returns HTTP 404 Not Found for all listing IDs' }
   ];
 
   return (

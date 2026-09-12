@@ -24,14 +24,23 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
       try {
         const detailFn = isRental ? api.getRentalDetail : api.getListingDetail;
         const data = await detailFn(listingId);
-        if (isMounted) {
-          setItem(data);
-        }
+        if (!isMounted) return;
+        setItem(data);
 
-        if (!isRental) {
-          const simData = await api.getSimilarListings(listingId);
-          if (isMounted) {
-            setSimilar(simData.slice(0, 4));
+        // Fetch similar listings
+        if (!isRental && data) {
+          try {
+            let simData = await api.getSimilarListings(listingId);
+            // If backend /similar endpoint returned empty (due to 404 missing endpoint), fallback to locality listings
+            if (!simData || simData.length === 0) {
+              const locRes = await api.getListings({ locality: data.locality, limit: 5 });
+              simData = (locRes.results || []).filter(x => x.listing_id !== listingId);
+            }
+            if (isMounted) {
+              setSimilar(simData.slice(0, 4));
+            }
+          } catch (e) {
+            console.warn('Similar listings fetch silent fallback:', e);
           }
         }
       } catch (err) {

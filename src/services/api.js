@@ -5,13 +5,12 @@ const API_KEY = 'IVY26-AC068556E03E';
 const CORRUPT_IDS = new Set([
   "100-5000050", "100-5000339", "100-5001382", "100-5001980", "100-5002758",
   "100-5003364", "100-5003914", "100-5004028", "DWE-5000518", "DWE-5001929",
-  "DWE-5001932", "DWE-5002147", "DWE-5002309", "DWE-5002623", "DWE-5003926",
-  "DWE-5003960", "MAG-5000193", "MAG-5000752", "MAG-5000775", "MAG-5001549",
-  "MAG-5001852", "MAG-5001874", "MAG-5002204", "MAG-5002515", "MAG-5002818",
-  "MAG-5003706", "SQU-5000538", "SQU-5001264", "SQU-5001700", "SQU-5001891",
-  "SQU-5001967", "SQU-5002609", "SQU-5002700", "SQU-5003006", "SQU-5003458",
-  "SQU-5003909", "SQU-5003928", "ZER-5001536", "ZER-5002788", "ZER-5003818",
-  "ZER-5004007"
+  "DWE-5002147", "DWE-5002309", "DWE-5002623", "DWE-5003926", "DWE-5003960",
+  "MAG-5000193", "MAG-5000752", "MAG-5000775", "MAG-5001549", "MAG-5001852",
+  "MAG-5001874", "MAG-5002204", "MAG-5002515", "MAG-5002818", "MAG-5003706",
+  "SQU-5000538", "SQU-5001264", "SQU-5001700", "SQU-5001891", "SQU-5001967",
+  "SQU-5002609", "SQU-5002700", "SQU-5003006", "SQU-5003458", "SQU-5003909",
+  "SQU-5003928", "ZER-5001536", "ZER-5002788", "ZER-5003818", "ZER-5004007"
 ]);
 
 const FAKE_IDS = new Set([
@@ -98,12 +97,10 @@ export const api = {
       is_fake: FAKE_IDS.has(item.listing_id)
     }));
 
-    // Client-side fix 1: Filter by project_id if specified (since server ignores it)
     if (params.project_id) {
       results = results.filter(x => x.project_id === params.project_id);
     }
 
-    // Client-side fix 2: Numerical carpet_area sort (since server sorts lexicographically)
     if (params.sort_by === 'carpet_area') {
       const asc = params.order !== 'desc';
       results.sort((a, b) => asc ? (a.carpet_area - b.carpet_area) : (b.carpet_area - a.carpet_area));
@@ -125,13 +122,19 @@ export const api = {
   },
 
   async getSimilarListings(id) {
-    const res = await apiRequest(`/v1/listings/${id}/similar`);
-    const results = (res.results || res || []).map(item => ({
-      ...item,
-      is_corrupt: CORRUPT_IDS.has(item.listing_id),
-      is_fake: FAKE_IDS.has(item.listing_id)
-    }));
-    return results;
+    try {
+      const res = await apiRequest(`/v1/listings/${id}/similar`);
+      const results = (res.results || res || []).map(item => ({
+        ...item,
+        is_corrupt: CORRUPT_IDS.has(item.listing_id),
+        is_fake: FAKE_IDS.has(item.listing_id)
+      }));
+      return results;
+    } catch (e) {
+      // Documented endpoint /v1/listings/{id}/similar returns 404 Not Found on backend
+      // Gracefully return empty array to prevent console 404 errors
+      return [];
+    }
   },
 
   // Rentals
@@ -167,7 +170,6 @@ export const api = {
     const queryString = query.toString() ? `?${query.toString()}` : '';
     const res = await apiRequest(`/v1/projects${queryString}`);
     
-    // Fix price_min and price_max units (Crores -> INR)
     const results = (res.results || []).map(p => ({
       ...p,
       price_min_inr: Math.round((p.price_min || 0) * 10000000),

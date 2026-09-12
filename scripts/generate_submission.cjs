@@ -352,6 +352,15 @@ async function main() {
         how_found: "Calculated price per square foot across all sale listings and identified extreme price anomalies (< Rs 500/sqft in Mumbai).",
         impact: "Users sorting by price ascending encounter fake bait listings priced at monthly rental values.",
         evidence: ["DWE-5000622", "DWE-5000893", "DWE-5001600", "DWE-5003025", "DWE-5003030", "MAG-5002355", "MAG-5002371", "MAG-5003431", "SQU-5002463", "ZER-5001089", "ZER-5001249"]
+      },
+      {
+        endpoint: "/v1/listings/{id}/similar",
+        category: "missing_endpoint",
+        documented: "GET /v1/listings/{listing_id}/similar returns up to ten comparable listings in the same locality.",
+        actual: "GET /v1/listings/{listing_id}/similar returns HTTP 404 {'detail': 'Not Found'} for all listing IDs.",
+        how_found: "Called GET /v1/listings/{listing_id}/similar across multiple listing IDs.",
+        impact: "Property detail pages cannot fetch server-side similar listings strip and must calculate fallback recommendations client-side.",
+        evidence: []
       }
     ]
   };

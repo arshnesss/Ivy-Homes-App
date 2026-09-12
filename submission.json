@@ -319,6 +319,15 @@
         "ZER-5001089",
         "ZER-5001249"
       ]
+    },
+    {
+      "endpoint": "/v1/listings/{id}/similar",
+      "category": "missing_endpoint",
+      "documented": "GET /v1/listings/{listing_id}/similar returns up to ten comparable listings in the same locality.",
+      "actual": "GET /v1/listings/{listing_id}/similar returns HTTP 404 {'detail': 'Not Found'} for all listing IDs.",
+      "how_found": "Called GET /v1/listings/{listing_id}/similar across multiple listing IDs.",
+      "impact": "Property detail pages cannot fetch server-side similar listings strip and must calculate fallback recommendations client-side.",
+      "evidence": []
     }
   ]
 }
