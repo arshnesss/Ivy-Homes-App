@@ -78,8 +78,8 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
           })}
         </nav>
 
-        {/* User Session, 3D Simulation & Theme Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* User Session, 3D Simulation & Theme Controls (Aligned to far top right) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
           {/* Easy Access 3D Simulation Button */}
           <button
             onClick={onOpenSimulation}
@@ -120,6 +120,9 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
+          {/* Divider */}
+          <div style={{ width: 1, height: 26, background: 'var(--border-color)', margin: '0 4px' }} />
+
           {user && (
             <>
               {/* Profile Badge */}
@@ -138,15 +141,15 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
                 }}
                 title={`Active Session: ${user.email}`}
               >
-                <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#2563EB', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <User size={13} />
+                <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#2563EB', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <User size={12} />
                 </div>
-                <span style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {user.email}
                 </span>
               </div>
 
-              {/* Sign Out Button with Clear Text Label */}
+              {/* Far Top-Right Sign Out Button */}
               <button
                 onClick={() => {
                   logout();
@@ -156,7 +159,7 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 6,
-                  padding: '7px 14px',
+                  padding: '8px 16px',
                   borderRadius: 10,
                   background: '#FEF2F2',
                   color: '#DC2626',
@@ -165,7 +168,10 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
                   fontWeight: 700,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
+                  boxShadow: '0 1px 3px rgba(220, 38, 38, 0.08)',
                 }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = '#FEE2E2'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#FEF2F2'; }}
                 title="Sign out of Ivy Homes"
               >
                 <LogOut size={15} />

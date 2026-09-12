@@ -30,6 +30,14 @@ export const LoginPage = () => {
     }
   };
 
+  const scrollToSection = (id) => (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleSelectDemo = (demoEmail) => {
     setEmail(demoEmail);
     setPassword('c7c1305e70');
@@ -82,17 +90,30 @@ export const LoginPage = () => {
 
           {/* Nav items */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-            <a href="#how-it-works" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+            <a 
+              href="#how-it-works" 
+              onClick={scrollToSection('how-it-works')}
+              style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}
+            >
               How it works
             </a>
-            <a href="#cost-of-waiting" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+            <a 
+              href="#cost-of-waiting" 
+              onClick={scrollToSection('cost-of-waiting')}
+              style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}
+            >
               Cost of Waiting
             </a>
-            <a href="#faq" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+            <a 
+              href="#faq" 
+              onClick={scrollToSection('faq')}
+              style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569', cursor: 'pointer' }}
+            >
               FAQ
             </a>
             <a
               href="#login-portal"
+              onClick={scrollToSection('login-portal')}
               style={{
                 padding: '9px 18px',
                 borderRadius: 20,
@@ -101,6 +122,7 @@ export const LoginPage = () => {
                 fontSize: '0.88rem',
                 fontWeight: 700,
                 boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+                cursor: 'pointer',
               }}
             >
               Sign In to Portal
@@ -175,6 +197,7 @@ export const LoginPage = () => {
             <div style={{ display: 'flex', gap: 14 }}>
               <a
                 href="#login-portal"
+                onClick={scrollToSection('login-portal')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -186,6 +209,7 @@ export const LoginPage = () => {
                   fontSize: '1.02rem',
                   fontWeight: 700,
                   boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                  cursor: 'pointer',
                 }}
               >
                 <span>Access Mumbai Portal</span>
@@ -194,6 +218,7 @@ export const LoginPage = () => {
 
               <a
                 href="#how-it-works"
+                onClick={scrollToSection('how-it-works')}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -206,6 +231,7 @@ export const LoginPage = () => {
                   fontSize: '1rem',
                   fontWeight: 600,
                   border: '1px solid rgba(255, 255, 255, 0.3)',
+                  cursor: 'pointer',
                 }}
               >
                 <span>Learn How It Works</span>

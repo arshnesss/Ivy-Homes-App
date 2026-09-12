@@ -32,7 +32,12 @@ const AppContent = () => {
   // Handle URL hash changes for dedicated page routes (e.g., #/listings/100-1000042)
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '');
+      const fullHash = window.location.hash || '';
+      // Ignore in-page section jump anchors (e.g. #how-it-works, #login-portal, #faq)
+      if (fullHash.startsWith('#') && !fullHash.startsWith('#/')) {
+        return;
+      }
+      const hash = fullHash.replace('#/', '');
       setCurrentRoute(hash || 'listings');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
