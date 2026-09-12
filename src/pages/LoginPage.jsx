@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { City3DBackground } from '../components/City3DBackground';
-import { KeyRound, Mail, Sparkles, ArrowRight, ShieldCheck, Building2, TrendingUp, Award } from 'lucide-react';
+import { KeyRound, Mail, Sparkles, ArrowRight, ShieldCheck, Building2, Flame, Compass, Zap } from 'lucide-react';
 
 export const LoginPage = () => {
   const { login, loading, error } = useAuth();
@@ -22,6 +22,12 @@ export const LoginPage = () => {
     setPassword('c7c1305e70');
   };
 
+  const demoAccounts = [
+    { email: 'demo1@ivy.homes', label: 'demo1', color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.4)' },
+    { email: 'demo2@ivy.homes', label: 'demo2', color: '#ec4899', glow: 'rgba(236, 72, 153, 0.4)' },
+    { email: 'demo3@ivy.homes', label: 'demo3', color: '#10b981', glow: 'rgba(16, 185, 129, 0.4)' },
+  ];
+
   return (
     <div
       style={{
@@ -32,23 +38,23 @@ export const LoginPage = () => {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        background: 'radial-gradient(ellipse at center, #0e1726 0%, #070b14 100%)',
+        background: 'radial-gradient(ellipse at 50% 40%, #15112e 0%, #080a14 70%, #04050a 100%)',
         padding: 20,
       }}
     >
-      {/* 3D Animated Architectural City Skyline */}
+      {/* 3D Animated Vibrant City Skyline */}
       <City3DBackground />
 
-      {/* Floating Ambient Glow Orbs */}
+      {/* Atmospheric Multi-Colored Glow Blooms */}
       <div
         style={{
           position: 'absolute',
-          top: '20%',
-          left: '15%',
-          width: 320,
-          height: 320,
-          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, transparent 70%)',
-          filter: 'blur(50px)',
+          top: '15%',
+          left: '18%',
+          width: 420,
+          height: 420,
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, transparent 65%)',
+          filter: 'blur(70px)',
           pointerEvents: 'none',
           zIndex: 1,
         }}
@@ -56,168 +62,198 @@ export const LoginPage = () => {
       <div
         style={{
           position: 'absolute',
-          bottom: '15%',
-          right: '15%',
-          width: 380,
-          height: 380,
-          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, transparent 70%)',
+          bottom: '12%',
+          right: '18%',
+          width: 460,
+          height: 460,
+          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, transparent 65%)',
+          filter: 'blur(80px)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '40%',
+          right: '30%',
+          width: 320,
+          height: 320,
+          background: 'radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 65%)',
           filter: 'blur(60px)',
           pointerEvents: 'none',
           zIndex: 1,
         }}
       />
 
-      {/* Main Glassmorphism Login Container */}
+      {/* Translucent Iridescent Glassmorphic Login Card */}
       <div
         className="glass-panel animate-fade-in"
         style={{
           position: 'relative',
           zIndex: 10,
-          maxWidth: 460,
+          maxWidth: 480,
           width: '100%',
-          padding: '40px 36px',
-          borderRadius: 24,
-          background: 'rgba(11, 17, 32, 0.75)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(56, 189, 248, 0.25)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.15)',
+          padding: '42px 38px',
+          borderRadius: 28,
+          background: 'linear-gradient(145deg, rgba(20, 24, 45, 0.72) 0%, rgba(30, 20, 50, 0.65) 50%, rgba(12, 18, 36, 0.78) 100%)',
+          backdropFilter: 'blur(30px)',
+          WebkitBackdropFilter: 'blur(30px)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 92, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
         }}
       >
-        {/* Brand Header */}
-        <div style={{ textAlign: 'center', marginBottom: 26 }}>
+        {/* Top Floating Badge */}
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              width: 54,
-              height: 54,
-              borderRadius: 16,
-              background: 'linear-gradient(135deg, #38bdf8 0%, #10b981 100%)',
-              color: '#ffffff',
-              boxShadow: '0 8px 24px rgba(56, 189, 248, 0.35)',
+              gap: 8,
+              padding: '6px 14px',
+              borderRadius: 20,
+              background: 'linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(236, 72, 153, 0.15))',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              color: '#38bdf8',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
               marginBottom: 14,
             }}
           >
-            <Sparkles size={28} />
+            <Zap size={13} color="#f59e0b" />
+            <span>Interactive 3D Metropolis</span>
           </div>
 
           <h1
             style={{
-              fontSize: '1.9rem',
-              fontWeight: 800,
-              letterSpacing: '-0.03em',
-              background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)',
+              fontSize: '2.4rem',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              lineHeight: 1.1,
+              background: 'linear-gradient(135deg, #ffffff 10%, #38bdf8 55%, #ec4899 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              marginBottom: 6,
+              marginBottom: 8,
             }}
           >
             Ivy Homes
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-            Mumbai Real Estate • Verified Live Portal
+
+          <p style={{ color: '#94a3b8', fontSize: '0.94rem', fontWeight: 500 }}>
+            Mumbai Real Estate • Verified Portal & Analytics
           </p>
         </div>
 
-        {/* Live Metrics Ticker Bar */}
+        {/* Live Metrics Grid with Colorful Accents */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 8,
-            background: 'rgba(15, 23, 42, 0.6)',
-            padding: '10px 12px',
-            borderRadius: 12,
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            marginBottom: 22,
+            background: 'rgba(10, 14, 28, 0.55)',
+            padding: '12px 14px',
+            borderRadius: 14,
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            marginBottom: 24,
             textAlign: 'center',
           }}
         >
           <div>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>
-              Listings
+            <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}>
+              Properties
             </span>
-            <strong style={{ fontSize: '0.92rem', color: '#38bdf8' }}>4,950</strong>
+            <strong style={{ fontSize: '1rem', color: '#38bdf8', fontFamily: 'var(--font-heading)' }}>4,950</strong>
           </div>
-          <div>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>
+
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.08)', borderRight: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}>
               Projects
             </span>
-            <strong style={{ fontSize: '0.92rem', color: '#10b981' }}>590</strong>
+            <strong style={{ fontSize: '1rem', color: '#ec4899', fontFamily: 'var(--font-heading)' }}>590</strong>
           </div>
+
           <div>
-            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>
+            <span style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'block' }}>
               Locality
             </span>
-            <strong style={{ fontSize: '0.92rem', color: '#f59e0b' }}>Powai</strong>
+            <strong style={{ fontSize: '1rem', color: '#10b981', fontFamily: 'var(--font-heading)' }}>Powai</strong>
           </div>
         </div>
 
-        {/* Demo Accounts Quick-Select */}
+        {/* Demo Accounts Quick-Select with Glowing Colors */}
         <div
           style={{
-            background: 'rgba(30, 41, 59, 0.5)',
-            padding: '12px 14px',
-            borderRadius: 12,
-            marginBottom: 22,
+            background: 'rgba(20, 27, 48, 0.45)',
+            padding: '14px',
+            borderRadius: 14,
+            marginBottom: 24,
             border: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
           <div
             style={{
-              fontSize: '0.74rem',
+              fontSize: '0.75rem',
               fontWeight: 700,
-              color: 'var(--text-muted)',
-              marginBottom: 8,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
+              color: '#cbd5e1',
+              marginBottom: 10,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              textTransform: 'uppercase',
+              letterSpacing: '0.04em',
             }}
           >
-            <span>Select Demo Account</span>
-            <span style={{ color: 'var(--accent)', fontSize: '0.7rem' }}>● One-Click Fill</span>
+            <span>Choose Demo Account</span>
+            <span style={{ color: '#10b981', fontSize: '0.7rem', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981' }} />
+              Auto Fill
+            </span>
           </div>
 
-          <div style={{ display: 'flex', gap: 6 }}>
-            {['demo1@ivy.homes', 'demo2@ivy.homes', 'demo3@ivy.homes'].map((demo) => (
-              <button
-                key={demo}
-                type="button"
-                onClick={() => setDemoAccount(demo)}
-                style={{
-                  flex: 1,
-                  padding: '7px 10px',
-                  borderRadius: 8,
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  background: email === demo ? 'linear-gradient(135deg, #38bdf8, #2563eb)' : 'rgba(15, 23, 42, 0.6)',
-                  color: email === demo ? '#ffffff' : 'var(--text-main)',
-                  border: email === demo ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.06)',
-                  boxShadow: email === demo ? '0 4px 12px rgba(56, 189, 248, 0.3)' : 'none',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {demo.split('@')[0]}
-              </button>
-            ))}
+          <div style={{ display: 'flex', gap: 8 }}>
+            {demoAccounts.map((acc) => {
+              const active = email === acc.email;
+              return (
+                <button
+                  key={acc.email}
+                  type="button"
+                  onClick={() => setDemoAccount(acc.email)}
+                  style={{
+                    flex: 1,
+                    padding: '9px 12px',
+                    borderRadius: 10,
+                    fontSize: '0.82rem',
+                    fontWeight: 700,
+                    background: active
+                      ? `linear-gradient(135deg, ${acc.color}, #6366f1)`
+                      : 'rgba(15, 23, 42, 0.65)',
+                    color: '#ffffff',
+                    border: active ? `1px solid ${acc.color}` : '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: active ? `0 4px 16px ${acc.glow}` : 'none',
+                    transform: active ? 'scale(1.02)' : 'none',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {acc.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Login Form */}
+        {/* Form */}
         <form onSubmit={handleSubmit}>
           {error && (
             <div
               style={{
-                background: 'rgba(239, 68, 68, 0.15)',
-                color: '#f87171',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
+                background: 'rgba(239, 68, 68, 0.2)',
+                color: '#fca5a5',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
                 padding: 12,
-                borderRadius: 10,
-                fontSize: '0.85rem',
+                borderRadius: 12,
+                fontSize: '0.88rem',
                 marginBottom: 18,
               }}
             >
@@ -232,7 +268,7 @@ export const LoginPage = () => {
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 marginBottom: 6,
-                color: 'var(--text-muted)',
+                color: '#94a3b8',
                 letterSpacing: '0.04em',
               }}
             >
@@ -245,7 +281,7 @@ export const LoginPage = () => {
                   position: 'absolute',
                   left: 14,
                   top: 13,
-                  color: 'var(--text-muted)',
+                  color: '#94a3b8',
                 }}
               />
               <input
@@ -255,17 +291,23 @@ export const LoginPage = () => {
                 required
                 style={{
                   width: '100%',
-                  padding: '11px 14px 11px 42px',
-                  borderRadius: 10,
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  padding: '12px 14px 12px 42px',
+                  borderRadius: 12,
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   color: '#ffffff',
-                  fontSize: '0.92rem',
+                  fontSize: '0.94rem',
                   outline: 'none',
-                  transition: 'border-color 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
-                onFocus={(e) => (e.target.style.borderColor = '#38bdf8')}
-                onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)')}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#38bdf8';
+                  e.target.style.boxShadow = '0 0 15px rgba(56, 189, 248, 0.3)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
           </div>
@@ -277,7 +319,7 @@ export const LoginPage = () => {
                 fontSize: '0.76rem',
                 fontWeight: 700,
                 marginBottom: 6,
-                color: 'var(--text-muted)',
+                color: '#94a3b8',
                 letterSpacing: '0.04em',
               }}
             >
@@ -290,7 +332,7 @@ export const LoginPage = () => {
                   position: 'absolute',
                   left: 14,
                   top: 13,
-                  color: 'var(--text-muted)',
+                  color: '#94a3b8',
                 }}
               />
               <input
@@ -300,35 +342,55 @@ export const LoginPage = () => {
                 required
                 style={{
                   width: '100%',
-                  padding: '11px 14px 11px 42px',
-                  borderRadius: 10,
-                  background: 'rgba(15, 23, 42, 0.7)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  padding: '12px 14px 12px 42px',
+                  borderRadius: 12,
+                  background: 'rgba(15, 23, 42, 0.75)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   color: '#ffffff',
-                  fontSize: '0.92rem',
+                  fontSize: '0.94rem',
                   outline: 'none',
-                  transition: 'border-color 0.2s',
+                  transition: 'all 0.2s ease',
                 }}
-                onFocus={(e) => (e.target.style.borderColor = '#38bdf8')}
-                onBlur={(e) => (e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)')}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#ec4899';
+                  e.target.style.boxShadow = '0 0 15px rgba(236, 72, 153, 0.3)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
           </div>
 
+          {/* Glowing Animated Gradient Enter Button */}
           <button
             type="submit"
             disabled={loading}
-            className="btn-primary"
             style={{
               width: '100%',
+              display: 'flex',
+              alignItems: 'center',
               justifyContent: 'center',
-              padding: '13px 20px',
-              fontSize: '1rem',
-              fontWeight: 700,
-              background: 'linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)',
+              gap: 10,
+              padding: '14px 22px',
+              fontSize: '1.02rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              background: 'linear-gradient(135deg, #38bdf8 0%, #8b5cf6 50%, #ec4899 100%)',
               border: 'none',
-              borderRadius: 12,
-              boxShadow: '0 8px 24px rgba(56, 189, 248, 0.4)',
+              borderRadius: 14,
+              cursor: 'pointer',
+              boxShadow: '0 8px 25px rgba(139, 92, 246, 0.45)',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 12px 30px rgba(236, 72, 153, 0.55)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(139, 92, 246, 0.45)';
             }}
           >
             <span>{loading ? 'Authenticating...' : 'Enter Mumbai Portal'}</span>
@@ -336,21 +398,21 @@ export const LoginPage = () => {
           </button>
         </form>
 
-        {/* Security / Verification Footnote */}
+        {/* Live Authentication Footer */}
         <div
           style={{
-            marginTop: 22,
+            marginTop: 24,
             textAlign: 'center',
             fontSize: '0.78rem',
-            color: 'var(--text-muted)',
+            color: '#94a3b8',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 6,
           }}
         >
-          <ShieldCheck size={14} color="#10b981" />
-          <span>Real live authentication with auto session refresh</span>
+          <ShieldCheck size={15} color="#10b981" />
+          <span>Secured live API connection with auto token refresh</span>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ export const City3DBackground = () => {
 
     // 1. Scene setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x070b14, 0.018);
+    scene.fog = new THREE.FogExp2(0x0a0c1a, 0.016);
 
     // 2. Camera setup
     const camera = new THREE.PerspectiveCamera(
@@ -19,121 +19,171 @@ export const City3DBackground = () => {
       1,
       1000
     );
-    camera.position.set(0, 30, 75);
-    camera.lookAt(0, 10, 0);
+    camera.position.set(0, 32, 75);
+    camera.lookAt(0, 8, 0);
 
     // 3. Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.3;
     container.appendChild(renderer.domElement);
 
-    // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0x1e293b, 1.5);
+    // 4. Vibrant Multi-Colored Lighting
+    const ambientLight = new THREE.AmbientLight(0x241d3b, 2.0);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x38bdf8, 2.5);
-    dirLight1.position.set(40, 60, 20);
-    scene.add(dirLight1);
+    // Cyan key light
+    const cyanLight = new THREE.DirectionalLight(0x06b6d4, 3.2);
+    cyanLight.position.set(45, 55, 30);
+    scene.add(cyanLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0x10b981, 1.8);
-    dirLight2.position.set(-40, 40, -20);
-    scene.add(dirLight2);
+    // Magenta / Rose rim light
+    const magentaLight = new THREE.DirectionalLight(0xf43f5e, 2.8);
+    magentaLight.position.set(-45, 45, -30);
+    scene.add(magentaLight);
 
-    const pulseLight = new THREE.PointLight(0x6366f1, 3, 60);
-    pulseLight.position.set(0, 15, 0);
-    scene.add(pulseLight);
+    // Purple / Indigo fill light
+    const purpleLight = new THREE.DirectionalLight(0x8b5cf6, 2.5);
+    purpleLight.position.set(0, 60, -40);
+    scene.add(purpleLight);
 
-    // 5. Ground Grid
-    const grid = new THREE.GridHelper(120, 60, 0x3b82f6, 0x1e293b);
-    grid.position.y = 0;
-    grid.material.opacity = 0.4;
-    grid.material.transparent = true;
-    scene.add(grid);
+    // Central pulsing multi-color core
+    const coreLight1 = new THREE.PointLight(0xec4899, 4, 70);
+    coreLight1.position.set(0, 18, 0);
+    scene.add(coreLight1);
+
+    const coreLight2 = new THREE.PointLight(0x38bdf8, 3.5, 60);
+    coreLight2.position.set(0, 10, 0);
+    scene.add(coreLight2);
+
+    // 5. Stylized Glowing Ground Grid
+    const gridHelper = new THREE.GridHelper(130, 65, 0xec4899, 0x38bdf8);
+    gridHelper.position.y = 0;
+    gridHelper.material.opacity = 0.55;
+    gridHelper.material.transparent = true;
+    scene.add(gridHelper);
+
+    // Radial ground disc glow
+    const discGeom = new THREE.RingGeometry(1, 60, 64);
+    const discMat = new THREE.MeshBasicMaterial({
+      color: 0x8b5cf6,
+      transparent: true,
+      opacity: 0.18,
+      side: THREE.DoubleSide
+    });
+    const discMesh = new THREE.Mesh(discGeom, discMat);
+    discMesh.rotation.x = Math.PI / 2;
+    discMesh.position.y = 0.05;
+    scene.add(discMesh);
 
     // 6. City Group
     const cityGroup = new THREE.Group();
     scene.add(cityGroup);
 
-    // Building materials
+    // Colorful neon edge palettes
+    const edgeColorHex = [0x38bdf8, 0xec4899, 0x8b5cf6, 0x10b981, 0xf59e0b];
+
+    // Building material with metallic iridescent sheen
     const buildingMat = new THREE.MeshStandardMaterial({
-      color: 0x090d16,
-      roughness: 0.15,
-      metalness: 0.85,
+      color: 0x090b16,
+      roughness: 0.2,
+      metalness: 0.9,
     });
 
-    const edgeColors = [0x38bdf8, 0x10b981, 0x60a5fa, 0x818cf8];
-
-    // Generate procedural cityscape
-    const buildingCount = 55;
-    const cityRadius = 38;
+    const buildingCount = 65;
+    const cityRadius = 40;
 
     for (let i = 0; i < buildingCount; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const dist = 6 + Math.random() * cityRadius;
+      const dist = 7 + Math.random() * cityRadius;
       const x = Math.cos(angle) * dist;
       const z = Math.sin(angle) * dist;
 
-      // Varied skyscraper dimensions
-      const width = 2.2 + Math.random() * 3.5;
-      const depth = 2.2 + Math.random() * 3.5;
-      // Taller buildings toward center
-      const height = (1 - dist / (cityRadius + 10)) * 28 + Math.random() * 14 + 5;
+      const width = 2.4 + Math.random() * 3.6;
+      const depth = 2.4 + Math.random() * 3.6;
+      const height = (1 - dist / (cityRadius + 10)) * 32 + Math.random() * 16 + 6;
 
       const geom = new THREE.BoxGeometry(width, height, depth);
       const mesh = new THREE.Mesh(geom, buildingMat);
       mesh.position.set(x, height / 2, z);
       cityGroup.add(mesh);
 
-      // Glowing edges
+      // Glowing multi-color edge wireframe
       const edges = new THREE.EdgesGeometry(geom);
-      const edgeColor = edgeColors[Math.floor(Math.random() * edgeColors.length)];
+      const chosenColor = edgeColorHex[i % edgeColorHex.length];
       const lineMat = new THREE.LineBasicMaterial({
-        color: edgeColor,
+        color: chosenColor,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.75,
       });
       const wireframe = new THREE.LineSegments(edges, lineMat);
       wireframe.position.copy(mesh.position);
       cityGroup.add(wireframe);
 
-      // Random penthouse beacon light
-      if (Math.random() > 0.65) {
-        const beaconGeom = new THREE.SphereGeometry(0.25, 8, 8);
-        const beaconMat = new THREE.MeshBasicMaterial({ color: edgeColor });
+      // Penthouse beacon or rooftop accent
+      if (Math.random() > 0.5) {
+        const beaconGeom = new THREE.SphereGeometry(0.35, 10, 10);
+        const beaconMat = new THREE.MeshBasicMaterial({ color: chosenColor });
         const beacon = new THREE.Mesh(beaconGeom, beaconMat);
-        beacon.position.set(x, height + 0.3, z);
+        beacon.position.set(x, height + 0.4, z);
         cityGroup.add(beacon);
+      }
+
+      // Floating holographic light rings above prime towers
+      if (Math.random() > 0.75) {
+        const ringGeom = new THREE.TorusGeometry(width * 0.7, 0.08, 8, 32);
+        const ringMat = new THREE.MeshBasicMaterial({ color: chosenColor, transparent: true, opacity: 0.8 });
+        const ring = new THREE.Mesh(ringGeom, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(x, height + 1.2, z);
+        cityGroup.add(ring);
       }
     }
 
-    // 7. Floating particles (golden embers / ambient dust)
-    const particleCount = 200;
+    // 7. Multi-Colored Floating Embers & Stardust (300 particles)
+    const particleCount = 280;
     const particleGeom = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
     const speeds = new Float32Array(particleCount);
 
+    const palette = [
+      new THREE.Color(0x38bdf8), // Cyan
+      new THREE.Color(0xec4899), // Magenta
+      new THREE.Color(0x8b5cf6), // Violet
+      new THREE.Color(0xf59e0b), // Amber Gold
+      new THREE.Color(0x10b981), // Emerald
+    ];
+
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 80;
-      positions[i * 3 + 1] = Math.random() * 40;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 80;
-      speeds[i] = 0.03 + Math.random() * 0.05;
+      positions[i * 3] = (Math.random() - 0.5) * 90;
+      positions[i * 3 + 1] = Math.random() * 50;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 90;
+
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      colors[i * 3] = col.r;
+      colors[i * 3 + 1] = col.g;
+      colors[i * 3 + 2] = col.b;
+
+      speeds[i] = 0.04 + Math.random() * 0.06;
     }
 
     particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
     const particleMat = new THREE.PointsMaterial({
-      color: 0x38bdf8,
-      size: 0.6,
+      size: 0.85,
+      vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.9,
       blending: THREE.AdditiveBlending,
     });
     const particleSystem = new THREE.Points(particleGeom, particleMat);
     scene.add(particleSystem);
 
-    // 8. Mouse parallax interaction
+    // 8. Mouse Parallax
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
@@ -157,7 +207,7 @@ export const City3DBackground = () => {
 
     window.addEventListener('resize', handleResize);
 
-    // 10. Animation Loop
+    // 10. Render Loop
     let animationFrameId;
     let clock = new THREE.Clock();
 
@@ -165,26 +215,27 @@ export const City3DBackground = () => {
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth camera interpolation
-      targetX += (mouseX * 12 - targetX) * 0.03;
-      targetY += (mouseY * 8 - targetY) * 0.03;
+      // Camera sway
+      targetX += (mouseX * 14 - targetX) * 0.035;
+      targetY += (mouseY * 9 - targetY) * 0.035;
 
-      camera.position.x = Math.sin(elapsedTime * 0.12) * 50 + targetX;
-      camera.position.z = Math.cos(elapsedTime * 0.12) * 50;
-      camera.position.y = 28 + targetY + Math.sin(elapsedTime * 0.4) * 2;
+      camera.position.x = Math.sin(elapsedTime * 0.14) * 52 + targetX;
+      camera.position.z = Math.cos(elapsedTime * 0.14) * 52;
+      camera.position.y = 29 + targetY + Math.sin(elapsedTime * 0.45) * 2.5;
       camera.lookAt(0, 10, 0);
 
-      // Rotate city gently
-      cityGroup.rotation.y = elapsedTime * 0.04;
+      // Slow majestic city rotation
+      cityGroup.rotation.y = elapsedTime * 0.045;
 
-      // Pulse beacon light
-      pulseLight.intensity = 2 + Math.sin(elapsedTime * 2) * 1.5;
+      // Color light pulses
+      coreLight1.intensity = 3 + Math.sin(elapsedTime * 2.4) * 2;
+      coreLight2.intensity = 3 + Math.cos(elapsedTime * 2.1) * 1.8;
 
-      // Animate floating particles
+      // Animate floating embers upward
       const posAttr = particleGeom.attributes.position;
       for (let i = 0; i < particleCount; i++) {
         let y = posAttr.getY(i) + speeds[i];
-        if (y > 45) y = 0;
+        if (y > 52) y = 0;
         posAttr.setY(i, y);
       }
       posAttr.needsUpdate = true;
@@ -194,7 +245,6 @@ export const City3DBackground = () => {
 
     animate();
 
-    // Cleanup
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
