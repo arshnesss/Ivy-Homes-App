@@ -1,45 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-// Procedural skyscraper texture with realistic architectural window lights
-function createArchitecturalTexture() {
-  const canvas = document.createElement('canvas');
-  canvas.width = 128;
-  canvas.height = 256;
-  const ctx = canvas.getContext('2d');
-
-  // Deep matte slate facade
-  ctx.fillStyle = '#0a0e1a';
-  ctx.fillRect(0, 0, 128, 256);
-
-  // Soft architectural window lights
-  const cols = 8;
-  const rows = 28;
-  const padX = 3;
-  const padY = 2;
-  const w = (128 - padX * (cols + 1)) / cols;
-  const h = (256 - padY * (rows + 1)) / rows;
-
-  const warmHues = ['#f8fafc', '#fde68a', '#93c5fd', '#e2e8f0', '#fed7aa'];
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (Math.random() > 0.45) {
-        const x = padX + c * (w + padX);
-        const y = padY + r * (h + padY);
-        ctx.fillStyle = warmHues[Math.floor(Math.random() * warmHues.length)];
-        ctx.globalAlpha = 0.35 + Math.random() * 0.45;
-        ctx.fillRect(x, y, w, h);
-      }
-    }
-  }
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  return texture;
-}
-
+/**
+ * Minimalist, ultra-clean 3D aesthetic background using lines, geometric shapes,
+ * an undulating architectural topographic wireframe grid, connected nodes,
+ * AND an interactive 3D mouse tracker where the terrain ripples, shapes rotate
+ * towards the cursor, and a floating 3D gyroscope reticle follows the mouse in real time.
+ */
 export const City3DBackground = () => {
   const mountRef = useRef(null);
 
@@ -47,156 +14,218 @@ export const City3DBackground = () => {
     const container = mountRef.current;
     if (!container) return;
 
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || window.innerHeight;
+
     // 1. Scene Setup
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x060913, 0.018);
+    scene.background = new THREE.Color(0x090e1a); // Deep modern obsidian-slate
+    scene.fog = new THREE.FogExp2(0x090e1a, 0.008);
 
     // 2. Camera Setup
-    const camera = new THREE.PerspectiveCamera(
-      40,
-      container.clientWidth / container.clientHeight,
-      1,
-      1000
-    );
-    camera.position.set(0, 30, 75);
-    camera.lookAt(0, 10, 0);
+    const camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
+    camera.position.set(0, 22, 65);
+    camera.lookAt(0, 2, 0);
 
-    // 3. Renderer
+    // 3. WebGL Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
-    // 4. Subtle, Warm Architectural Lighting (no garish neon)
-    const ambientLight = new THREE.AmbientLight(0x1e2640, 2.0);
-    scene.add(ambientLight);
+    // 4. Undulating Topographic Architectural Wireframe Mesh (Elevation Terrain)
+    const terrainWidth = 150;
+    const terrainDepth = 150;
+    const segmentsX = 50;
+    const segmentsZ = 50;
 
-    const keyLight = new THREE.DirectionalLight(0x94a3b8, 2.2);
-    keyLight.position.set(40, 50, 30);
-    scene.add(keyLight);
+    const planeGeom = new THREE.PlaneGeometry(terrainWidth, terrainDepth, segmentsX, segmentsZ);
+    planeGeom.rotateX(-Math.PI / 2);
 
-    const warmFill = new THREE.DirectionalLight(0x38bdf8, 1.2);
-    warmFill.position.set(-40, 30, -20);
-    scene.add(warmFill);
-
-    // 5. Dark Reflective Ground Plane
-    const groundGeom = new THREE.PlaneGeometry(240, 240);
-    const groundMat = new THREE.MeshStandardMaterial({
-      color: 0x05070e,
-      roughness: 0.2,
-      metalness: 0.8,
-    });
-    const ground = new THREE.Mesh(groundGeom, groundMat);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -0.1;
-    scene.add(ground);
-
-    // Subtle dark grid
-    const grid = new THREE.GridHelper(160, 60, 0x1e293b, 0x0f172a);
-    grid.position.y = 0.02;
-    grid.material.opacity = 0.3;
-    grid.material.transparent = true;
-    scene.add(grid);
-
-    // 6. Skyscraper Buildings
-    const facadeTexture = createArchitecturalTexture();
-    facadeTexture.repeat.set(1, 2);
-
-    const buildingMat = new THREE.MeshStandardMaterial({
-      color: 0x0d1322,
-      roughness: 0.35,
-      metalness: 0.7,
-      map: facadeTexture,
-      emissive: 0x111827,
-      emissiveMap: facadeTexture,
-      emissiveIntensity: 0.5,
-    });
-
-    const cityGroup = new THREE.Group();
-    scene.add(cityGroup);
-
-    const count = 55;
-    for (let i = 0; i < count; i++) {
-      const side = i % 2 === 0 ? 1 : -1;
-      const isFlank = i < 40;
-
-      let x, z;
-      if (isFlank) {
-        // Flanked on left and right
-        x = side * (16 + Math.random() * 34);
-        z = (Math.random() - 0.3) * 55;
-      } else {
-        // Distant horizon
-        x = (Math.random() - 0.5) * 80;
-        z = -20 - Math.random() * 30;
-      }
-
-      const w = 3.2 + Math.random() * 3.8;
-      const d = 3.2 + Math.random() * 3.8;
-      const h = isFlank ? 18 + Math.random() * 26 : 10 + Math.random() * 18;
-
-      const geom = new THREE.BoxGeometry(w, h, d);
-      const mesh = new THREE.Mesh(geom, buildingMat);
-      mesh.position.set(x, h / 2, z);
-      cityGroup.add(mesh);
-
-      // Subtle edge line
-      const edges = new THREE.EdgesGeometry(geom);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0x334155,
-        transparent: true,
-        opacity: 0.4,
-      });
-      const wireframe = new THREE.LineSegments(edges, lineMat);
-      wireframe.position.copy(mesh.position);
-      cityGroup.add(wireframe);
-    }
-
-    // 7. Subtle Ambient Floating Dust Particles (no disco sparkles)
-    const pCount = 120;
-    const pGeom = new THREE.BufferGeometry();
-    const pPos = new Float32Array(pCount * 3);
-    const pSpeeds = new Float32Array(pCount);
-
-    for (let i = 0; i < pCount; i++) {
-      pPos[i * 3] = (Math.random() - 0.5) * 90;
-      pPos[i * 3 + 1] = Math.random() * 45;
-      pPos[i * 3 + 2] = (Math.random() - 0.5) * 90;
-      pSpeeds[i] = 0.02 + Math.random() * 0.03;
-    }
-
-    pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-    const pMat = new THREE.PointsMaterial({
-      size: 0.6,
-      color: 0x94a3b8,
+    const terrainWireframeMat = new THREE.MeshBasicMaterial({
+      color: 0x3b82f6,
+      wireframe: true,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.24,
     });
-    const particles = new THREE.Points(pGeom, pMat);
-    scene.add(particles);
+    const terrainMesh = new THREE.Mesh(planeGeom, terrainWireframeMat);
+    terrainMesh.position.y = -10;
+    scene.add(terrainMesh);
 
-    // 8. Mouse Parallax
+    const originalPositions = planeGeom.attributes.position.clone();
+
+    // 5. Floating Architectural Geometric Wireframes (Cubes, Icosahedrons, Octahedrons, Rings)
+    const shapesGroup = new THREE.Group();
+    scene.add(shapesGroup);
+
+    const shapeGeometries = [
+      new THREE.IcosahedronGeometry(3.6, 0),
+      new THREE.OctahedronGeometry(4.2, 0),
+      new THREE.BoxGeometry(4.5, 4.5, 4.5),
+      new THREE.TorusGeometry(3.4, 0.5, 8, 24),
+      new THREE.DodecahedronGeometry(3.8, 0),
+    ];
+
+    const floatingObjects = [];
+    const shapePositions = [
+      { x: -32, y: 12, z: -8 },
+      { x: 34, y: 16, z: -6 },
+      { x: -28, y: -2, z: 12 },
+      { x: 28, y: -3, z: 12 },
+      { x: -44, y: 22, z: -20 },
+      { x: 42, y: 22, z: -18 },
+      { x: 0, y: 26, z: -25 },
+    ];
+
+    shapePositions.forEach((cfg, idx) => {
+      const geom = shapeGeometries[idx % shapeGeometries.length];
+      const edges = new THREE.EdgesGeometry(geom);
+
+      const lineMat = new THREE.LineBasicMaterial({
+        color: idx % 2 === 0 ? 0x60a5fa : 0x94a3b8,
+        transparent: true,
+        opacity: 0.6,
+      });
+
+      const lineWireframe = new THREE.LineSegments(edges, lineMat);
+      lineWireframe.position.set(cfg.x, cfg.y, cfg.z);
+      shapesGroup.add(lineWireframe);
+
+      // Delicate glowing core node inside each shape
+      const coreGeom = new THREE.BufferGeometry();
+      coreGeom.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+      const coreMat = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 2.5,
+        transparent: true,
+        opacity: 0.85,
+      });
+      const corePoint = new THREE.Points(coreGeom, coreMat);
+      lineWireframe.add(corePoint);
+
+      floatingObjects.push({
+        mesh: lineWireframe,
+        basePos: new THREE.Vector3(cfg.x, cfg.y, cfg.z),
+        speed: 0.8 + Math.random() * 0.5,
+      });
+    });
+
+    // 6. Interactive 3D Gyroscope Mouse Reticle (Directly follows cursor in 3D space)
+    const mouseReticle = new THREE.Group();
+    scene.add(mouseReticle);
+
+    // Outer ring
+    const outerRingGeom = new THREE.RingGeometry(2.4, 2.55, 32);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0x60a5fa,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const outerRing = new THREE.Mesh(outerRingGeom, ringMat);
+    mouseReticle.add(outerRing);
+
+    // Inner ring
+    const innerRingGeom = new THREE.RingGeometry(1.4, 1.55, 24);
+    const innerRingMat = new THREE.MeshBasicMaterial({
+      color: 0x93c5fd,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.85,
+    });
+    const innerRing = new THREE.Mesh(innerRingGeom, innerRingMat);
+    innerRing.rotation.x = Math.PI / 3;
+    mouseReticle.add(innerRing);
+
+    // Center glowing crosshair point
+    const centerPointGeom = new THREE.BufferGeometry();
+    centerPointGeom.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0], 3));
+    const centerPointMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 3.5,
+      transparent: true,
+      opacity: 0.95,
+    });
+    const centerPoint = new THREE.Points(centerPointGeom, centerPointMat);
+    mouseReticle.add(centerPoint);
+
+    // 7. Constellation Network Nodes & Lines
+    const nodeCount = 55;
+    const nodePositions = new Float32Array(nodeCount * 3);
+    const nodeVelocities = [];
+
+    for (let i = 0; i < nodeCount; i++) {
+      nodePositions[i * 3] = (Math.random() - 0.5) * 95;
+      nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 45 + 8;
+      nodePositions[i * 3 + 2] = (Math.random() - 0.5) * 60;
+
+      nodeVelocities.push({
+        vx: (Math.random() - 0.5) * 0.035,
+        vy: (Math.random() - 0.5) * 0.035,
+        vz: (Math.random() - 0.5) * 0.035,
+      });
+    }
+
+    const nodeGeom = new THREE.BufferGeometry();
+    nodeGeom.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+    const nodeMat = new THREE.PointsMaterial({
+      color: 0x93c5fd,
+      size: 1.8,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const nodePoints = new THREE.Points(nodeGeom, nodeMat);
+    scene.add(nodePoints);
+
+    const maxLineSegments = 160;
+    const linePositions = new Float32Array(maxLineSegments * 6);
+    const dynamicLineGeom = new THREE.BufferGeometry();
+    dynamicLineGeom.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
+    const dynamicLineMat = new THREE.LineBasicMaterial({
+      color: 0x3b82f6,
+      transparent: true,
+      opacity: 0.28,
+    });
+    const constellationLines = new THREE.LineSegments(dynamicLineGeom, dynamicLineMat);
+    scene.add(constellationLines);
+
+    // 8. Mouse Coordinate Tracking & Raycasting
+    const raycaster = new THREE.Raycaster();
+    const mouseNDC = new THREE.Vector2(0, 0);
+    const targetMouseWorld = new THREE.Vector3(0, 4, 0);
+    const currentMouseWorld = new THREE.Vector3(0, 4, 0);
+    const interactionPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0); // Z=0 plane
+
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
+    let targetCamX = 0;
+    let targetCamY = 0;
 
     const handleMouseMove = (e) => {
       const rect = container.getBoundingClientRect();
-      mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-      mouseY = -((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      mouseNDC.set(x, y);
+      mouseX = x;
+      mouseY = y;
+
+      // Project mouse into 3D world space
+      raycaster.setFromCamera(mouseNDC, camera);
+      raycaster.ray.intersectPlane(interactionPlane, targetMouseWorld);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
 
-    // 9. Resize
+    // 9. Responsive Resize
     const handleResize = () => {
       if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setSize(w, h);
     };
 
     window.addEventListener('resize', handleResize);
@@ -207,25 +236,132 @@ export const City3DBackground = () => {
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      const time = clock.getElapsedTime();
 
-      targetX += (mouseX * 8 - targetX) * 0.03;
-      targetY += (mouseY * 5 - targetY) * 0.03;
+      // Smoothly interpolate 3D mouse position (spring effect)
+      currentMouseWorld.lerp(targetMouseWorld, 0.08);
 
-      camera.position.x = Math.sin(elapsed * 0.08) * 20 + targetX;
-      camera.position.z = 74 + Math.cos(elapsed * 0.08) * 8;
-      camera.position.y = 28 + targetY;
-      camera.lookAt(0, 10, 0);
+      // Move 3D Gyroscope reticle to mouse position
+      mouseReticle.position.copy(currentMouseWorld);
+      mouseReticle.rotation.z = time * 1.2;
+      outerRing.rotation.y = time * 0.8;
+      innerRing.rotation.x = time * 1.4;
 
-      cityGroup.rotation.y = Math.sin(elapsed * 0.04) * 0.04;
+      // Dynamic Camera Parallax with smooth damping
+      targetCamX += (mouseX * 18 - targetCamX) * 0.04;
+      targetCamY += (mouseY * 12 - targetCamY) * 0.04;
 
-      const pos = pGeom.attributes.position;
-      for (let i = 0; i < pCount; i++) {
-        let y = pos.getY(i) + pSpeeds[i];
-        if (y > 45) y = 0;
-        pos.setY(i, y);
+      camera.position.x = Math.sin(time * 0.08) * 8 + targetCamX;
+      camera.position.y = 22 + targetCamY + Math.sin(time * 0.1) * 1.5;
+      camera.lookAt(currentMouseWorld.x * 0.25, 2 + currentMouseWorld.y * 0.25, 0);
+
+      // 1. Interactive Undulating Terrain (Wave + Interactive Ripple around Mouse)
+      const posAttr = planeGeom.attributes.position;
+      const origAttr = originalPositions;
+      const mouse3DX = currentMouseWorld.x;
+      const mouse3DZ = currentMouseWorld.y; // mapped to plane depth
+
+      for (let i = 0; i < posAttr.count; i++) {
+        const u = origAttr.getX(i);
+        const w = origAttr.getZ(i);
+
+        // Base harmonic wave
+        let elevation = 
+          Math.sin(u * 0.08 + time * 0.8) * 2.5 +
+          Math.cos(w * 0.08 + time * 0.6) * 2.5;
+
+        // Interactive ripple from mouse position
+        const distToMouse = Math.sqrt((u - mouse3DX) * (u - mouse3DX) + (w - mouse3DZ) * (w - mouse3DZ));
+        if (distToMouse < 28) {
+          const ripple = Math.sin((distToMouse - time * 6) * 0.6) * (1 - distToMouse / 28) * 3.2;
+          elevation += ripple;
+        }
+
+        posAttr.setY(i, elevation);
       }
-      pos.needsUpdate = true;
+      posAttr.needsUpdate = true;
+
+      // 2. Floating Shapes: Tilt & Orient smoothly towards the cursor
+      floatingObjects.forEach((obj, idx) => {
+        // Continuous rotation
+        obj.mesh.rotation.x += 0.006;
+        obj.mesh.rotation.y += 0.008;
+
+        // Subtle float
+        obj.mesh.position.y = obj.basePos.y + Math.sin(time * obj.speed + idx) * 2.2;
+
+        // Interactive attraction: pull slightly towards cursor
+        const dir = new THREE.Vector3().subVectors(currentMouseWorld, obj.basePos);
+        const dist = dir.length();
+        if (dist < 40) {
+          const pullFactor = (1 - dist / 40) * 2.5;
+          obj.mesh.position.x = obj.basePos.x + dir.x * (pullFactor / dist);
+          obj.mesh.position.z = obj.basePos.z + dir.z * (pullFactor / dist);
+        } else {
+          obj.mesh.position.x += (obj.basePos.x - obj.mesh.position.x) * 0.05;
+          obj.mesh.position.z += (obj.basePos.z - obj.mesh.position.z) * 0.05;
+        }
+      });
+
+      // 3. Constellation Nodes: Swirl & Gravitate around cursor
+      const nPos = nodeGeom.attributes.position;
+      for (let i = 0; i < nodeCount; i++) {
+        let px = nPos.getX(i) + nodeVelocities[i].vx;
+        let py = nPos.getY(i) + nodeVelocities[i].vy;
+        let pz = nPos.getZ(i) + nodeVelocities[i].vz;
+
+        // Mouse proximity swirl
+        const dx = px - currentMouseWorld.x;
+        const dy = py - currentMouseWorld.y;
+        const dSq = dx * dx + dy * dy;
+        if (dSq < 250 && dSq > 1) {
+          // Gentle orbital swirl around cursor
+          const force = 0.04 * (1 - Math.sqrt(dSq) / 16);
+          px += -dy * force;
+          py += dx * force;
+        }
+
+        // Boundary bounce
+        if (px > 50 || px < -50) nodeVelocities[i].vx *= -1;
+        if (py > 35 || py < -10) nodeVelocities[i].vy *= -1;
+        if (pz > 32 || pz < -32) nodeVelocities[i].vz *= -1;
+
+        nPos.setXYZ(i, px, py, pz);
+      }
+      nPos.needsUpdate = true;
+
+      // Connecting lines between nearby nodes
+      let lineIdx = 0;
+      const maxDistSq = 18 * 18;
+      const linePosArray = dynamicLineGeom.attributes.position.array;
+
+      for (let i = 0; i < nodeCount && lineIdx < maxLineSegments * 6; i++) {
+        const x1 = nPos.getX(i);
+        const y1 = nPos.getY(i);
+        const z1 = nPos.getZ(i);
+
+        for (let j = i + 1; j < nodeCount && lineIdx < maxLineSegments * 6; j++) {
+          const dx = x1 - nPos.getX(j);
+          const dy = y1 - nPos.getY(j);
+          const dz = z1 - nPos.getZ(j);
+          const distSq = dx * dx + dy * dy + dz * dz;
+
+          if (distSq < maxDistSq) {
+            linePosArray[lineIdx++] = x1;
+            linePosArray[lineIdx++] = y1;
+            linePosArray[lineIdx++] = z1;
+
+            linePosArray[lineIdx++] = nPos.getX(j);
+            linePosArray[lineIdx++] = nPos.getY(j);
+            linePosArray[lineIdx++] = nPos.getZ(j);
+          }
+        }
+      }
+
+      for (let k = lineIdx; k < linePosArray.length; k++) {
+        linePosArray[k] = 0;
+      }
+      dynamicLineGeom.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
@@ -258,3 +394,4 @@ export const City3DBackground = () => {
     />
   );
 };
+export default City3DBackground;

@@ -12,9 +12,9 @@ export const SignInPage = ({ onBack }) => {
   const [password, setPassword] = useState('c7c1305e70');
 
   const demoAccounts = [
-    { email: 'demo1@ivy.homes', label: 'demo1', role: 'Portfolio Lead', desc: 'Sale & Rental Acquisitions' },
-    { email: 'demo2@ivy.homes', label: 'demo2', role: 'Asset Analyst', desc: 'Valuation & Pricing Yields' },
-    { email: 'demo3@ivy.homes', label: 'demo3', role: 'Data Auditor', desc: 'Matrix & Fraud Forensics' },
+    { email: 'demo1@ivy.homes', label: 'demo1', role: 'Portfolio Lead' },
+    { email: 'demo2@ivy.homes', label: 'demo2', role: 'Asset Analyst' },
+    { email: 'demo3@ivy.homes', label: 'demo3', role: 'Data Auditor' },
   ];
 
   const handleSubmit = async (e) => {
@@ -33,23 +33,12 @@ export const SignInPage = ({ onBack }) => {
   };
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', width: '100vw', overflow: 'hidden', background: '#070B14' }}>
+    <div style={{ position: 'relative', minHeight: '100vh', width: '100vw', overflow: 'hidden', background: '#0e1320' }}>
       
-      {/* 3D Three.js Interactive Architectural City Animation in Background */}
+      {/* 1. Aesthetic Architectural 3D City Skyline in Background */}
       <City3DBackground />
 
-      {/* Ambient Gradient Overlays for Cinematic Depth */}
-      <div 
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.45) 0%, rgba(7, 11, 20, 0.88) 100%)',
-          pointerEvents: 'none',
-          zIndex: 1,
-        }}
-      />
-
-      {/* Top Bar with Back Button */}
+      {/* 2. Top Header Navigation */}
       <div 
         style={{
           position: 'absolute',
@@ -69,22 +58,28 @@ export const SignInPage = ({ onBack }) => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            padding: '10px 18px',
-            borderRadius: 14,
-            background: 'rgba(15, 23, 42, 0.75)',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            color: '#F8FAFC',
+            padding: '10px 20px',
+            borderRadius: 30,
+            background: 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            color: '#0F172A',
             fontSize: '0.88rem',
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: 'pointer',
             transition: 'all 0.2s ease',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.18)',
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(37, 99, 235, 0.3)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(15, 23, 42, 0.75)'; }}
+          onMouseEnter={(e) => { 
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.background = '#ffffff';
+          }}
+          onMouseLeave={(e) => { 
+            e.currentTarget.style.transform = 'none';
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.92)';
+          }}
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} color="#2563EB" />
           <span>Back to Ivy Homes</span>
         </button>
 
@@ -94,22 +89,23 @@ export const SignInPage = ({ onBack }) => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            padding: '8px 16px',
-            borderRadius: 20,
-            background: 'rgba(15, 23, 42, 0.65)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#94A3B8',
-            fontSize: '0.82rem',
-            fontWeight: 600,
+            padding: '9px 18px',
+            borderRadius: 30,
+            background: 'rgba(255, 255, 255, 0.92)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(226, 232, 240, 0.8)',
+            color: '#1E293B',
+            fontSize: '0.84rem',
+            fontWeight: 700,
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.18)',
           }}
         >
-          <Sparkles size={14} color="#38BDF8" />
+          <Sparkles size={15} color="#2563EB" />
           <span>Mumbai Micro-Market Intelligence Engine</span>
         </div>
       </div>
 
-      {/* Centered Glassmorphic Login Console */}
+      {/* 3. Centered Light Mode Aesthetic Login Card */}
       <div 
         style={{
           position: 'relative',
@@ -124,52 +120,52 @@ export const SignInPage = ({ onBack }) => {
         <div
           style={{
             width: '100%',
-            maxWidth: 520,
-            background: 'rgba(15, 23, 42, 0.78)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            maxWidth: 460,
+            background: 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(30px)',
+            WebkitBackdropFilter: 'blur(30px)',
             borderRadius: 24,
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            padding: '40px 38px',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.7)',
+            padding: '38px 36px',
+            boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(226, 232, 240, 0.6)',
             animation: 'fadeIn 0.3s ease',
           }}
         >
           {/* Brand Header */}
-          <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{ textAlign: 'center', marginBottom: 24 }}>
             <div
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 16,
-                background: 'linear-gradient(135deg, #2563EB 0%, #3B82F6 100%)',
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                background: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 16px',
-                boxShadow: '0 8px 24px rgba(37, 99, 235, 0.4)',
+                margin: '0 auto 12px',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.35)',
               }}
             >
-              <Building2 size={26} />
+              <Building2 size={24} />
             </div>
 
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#F8FAFC', letterSpacing: '-0.02em', marginBottom: 6 }}>
-              ivy <span style={{ color: '#60A5FA' }}>homes</span>
+            <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', marginBottom: 4 }}>
+              ivy <span style={{ color: '#2563EB' }}>homes</span>
             </h1>
-            <p style={{ fontSize: '0.9rem', color: '#94A3B8' }}>
+            <p style={{ fontSize: '0.9rem', color: '#64748B', fontWeight: 500 }}>
               Sign in to explore verified properties & analytics
             </p>
           </div>
 
           {/* Quick Demo Selector */}
-          <div style={{ marginBottom: 24 }}>
+          <div style={{ marginBottom: 22 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 One-Click Demo Roles:
               </span>
-              <span style={{ fontSize: '0.72rem', color: '#34D399', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
-                <Check size={12} /> Auto-Fills
+              <span style={{ fontSize: '0.74rem', color: '#16A34A', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Check size={13} /> Auto-Fills
               </span>
             </div>
 
@@ -182,19 +178,20 @@ export const SignInPage = ({ onBack }) => {
                     type="button"
                     onClick={() => handleSelectDemo(acc.email)}
                     style={{
-                      padding: '12px 10px',
+                      padding: '12px 6px',
                       borderRadius: 12,
-                      textAlign: 'left',
-                      background: isSelected ? 'rgba(37, 99, 235, 0.25)' : 'rgba(30, 41, 59, 0.5)',
-                      border: isSelected ? '1px solid #3B82F6' : '1px solid rgba(255, 255, 255, 0.08)',
+                      textAlign: 'center',
+                      background: isSelected ? '#EFF6FF' : '#F8FAFC',
+                      border: isSelected ? '2px solid #2563EB' : '1px solid #E2E8F0',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease',
+                      transition: 'all 0.15s ease',
+                      boxShadow: isSelected ? '0 2px 10px rgba(37, 99, 235, 0.15)' : 'none',
                     }}
                   >
-                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: isSelected ? '#60A5FA' : '#F8FAFC' }}>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 800, color: isSelected ? '#2563EB' : '#0F172A' }}>
                       {acc.label}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: isSelected ? '#93C5FD' : '#64748B', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <div style={{ fontSize: '0.7rem', color: isSelected ? '#1D4ED8' : '#64748B', fontWeight: 600, marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {acc.role}
                     </div>
                   </button>
@@ -208,12 +205,13 @@ export const SignInPage = ({ onBack }) => {
             {error && (
               <div
                 style={{
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.3)',
-                  color: '#F87171',
+                  background: '#FEF2F2',
+                  border: '1px solid #FCA5A5',
+                  color: '#B91C1C',
                   padding: '12px 16px',
                   borderRadius: 10,
                   fontSize: '0.84rem',
+                  fontWeight: 600,
                   marginBottom: 18,
                 }}
               >
@@ -222,7 +220,7 @@ export const SignInPage = ({ onBack }) => {
             )}
 
             <div style={{ marginBottom: 18 }}>
-              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: 6 }}>
                 Email Address
               </label>
               <div style={{ position: 'relative' }}>
@@ -236,18 +234,22 @@ export const SignInPage = ({ onBack }) => {
                     width: '100%',
                     padding: '12px 16px 12px 44px',
                     borderRadius: 12,
-                    background: 'rgba(15, 23, 42, 0.65)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#F8FAFC',
-                    fontSize: '0.92rem',
+                    background: '#FFFFFF',
+                    border: '1.5px solid #CBD5E1',
+                    color: '#0F172A',
+                    fontSize: '0.94rem',
+                    fontWeight: 500,
                     outline: 'none',
+                    transition: 'border-color 0.15s ease',
                   }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = '#2563EB'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = '#CBD5E1'; }}
                 />
               </div>
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: 'block', fontSize: '0.74rem', fontWeight: 700, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 800, color: '#334155', textTransform: 'uppercase', marginBottom: 6 }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
@@ -261,12 +263,16 @@ export const SignInPage = ({ onBack }) => {
                     width: '100%',
                     padding: '12px 16px 12px 44px',
                     borderRadius: 12,
-                    background: 'rgba(15, 23, 42, 0.65)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#F8FAFC',
-                    fontSize: '0.92rem',
+                    background: '#FFFFFF',
+                    border: '1.5px solid #CBD5E1',
+                    color: '#0F172A',
+                    fontSize: '0.94rem',
+                    fontWeight: 500,
                     outline: 'none',
+                    transition: 'border-color 0.15s ease',
                   }}
+                  onFocus={(e) => { e.currentTarget.style.borderColor = '#2563EB'; }}
+                  onBlur={(e) => { e.currentTarget.style.borderColor = '#CBD5E1'; }}
                 />
               </div>
             </div>
@@ -288,19 +294,25 @@ export const SignInPage = ({ onBack }) => {
                 justifyContent: 'center',
                 gap: 10,
                 cursor: 'pointer',
-                boxShadow: '0 4px 20px rgba(37, 99, 235, 0.45)',
-                transition: 'transform 0.15s ease',
+                boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; }}
+              onMouseEnter={(e) => { 
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 25px rgba(37, 99, 235, 0.5)';
+              }}
+              onMouseLeave={(e) => { 
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(37, 99, 235, 0.4)';
+              }}
             >
               <span>{loading ? 'Authenticating...' : 'Enter Mumbai Property Portal'}</span>
               <ArrowRight size={18} />
             </button>
           </form>
 
-          <div style={{ marginTop: 22, textAlign: 'center', fontSize: '0.76rem', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-            <ShieldCheck size={14} color="#34D399" />
+          <div style={{ marginTop: 22, textAlign: 'center', fontSize: '0.78rem', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontWeight: 600 }}>
+            <ShieldCheck size={15} color="#16A34A" />
             <span>Connected to solve.ivy.homes • Key: IVY26-AC068556E03E</span>
           </div>
         </div>
@@ -309,3 +321,4 @@ export const SignInPage = ({ onBack }) => {
     </div>
   );
 };
+export default SignInPage;
