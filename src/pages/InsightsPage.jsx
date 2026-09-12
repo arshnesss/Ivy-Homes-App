@@ -257,13 +257,13 @@ export const InsightsPage = () => {
                     </span>
                   </div>
 
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 8 }}>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: 8, color: 'var(--text-main)', lineHeight: 1.3 }}>
                     {q.title}
                   </h3>
 
                   <div
                     style={{
-                      fontSize: '1.5rem',
+                      fontSize: '1.55rem',
                       fontWeight: 800,
                       color: 'var(--primary)',
                       fontFamily: 'var(--font-heading)',
@@ -273,24 +273,23 @@ export const InsightsPage = () => {
                     {q.answer}
                   </div>
 
-                  <div style={{ fontSize: '0.88rem', color: '#e2e8f0', marginBottom: 12, fontWeight: 500 }}>
+                  <div style={{ fontSize: '0.94rem', color: 'var(--text-main)', marginBottom: 14, fontWeight: 500, lineHeight: 1.5 }}>
                     {q.summary}
                   </div>
                 </div>
 
                 <div
                   style={{
-                    fontSize: '0.8rem',
+                    fontSize: '0.84rem',
                     color: 'var(--text-muted)',
-                    lineHeight: 1.5,
-                    borderTop: '1px solid var(--border-color)',
-                    paddingTop: 12,
-                    background: 'rgba(0, 0, 0, 0.15)',
-                    padding: '10px 12px',
-                    borderRadius: 8,
+                    lineHeight: 1.6,
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border-color)',
+                    padding: '12px 14px',
+                    borderRadius: 10,
                   }}
                 >
-                  <strong style={{ color: 'var(--text-main)', display: 'block', marginBottom: 2 }}>
+                  <strong style={{ color: 'var(--text-main)', display: 'block', marginBottom: 4, fontSize: '0.82rem', letterSpacing: '0.02em', textTransform: 'uppercase' }}>
                     Detective Methodology:
                   </strong>
                   {q.methodology}

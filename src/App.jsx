@@ -11,6 +11,9 @@ import { ProjectsPage } from './pages/ProjectsPage';
 import { SavedPage } from './pages/SavedPage';
 import { InsightsPage } from './pages/InsightsPage';
 
+import { SimulationModal } from './components/SimulationModal';
+import { Sparkles } from 'lucide-react';
+
 const AppContent = () => {
   const { user } = useAuth();
   const [currentRoute, setCurrentRoute] = useState(() => {
@@ -18,13 +21,13 @@ const AppContent = () => {
   });
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('ivy_theme');
-    // If previous session had dark cached, reset to light per user request
     if (saved === 'dark') {
       localStorage.setItem('ivy_theme', 'light');
       return 'light';
     }
     return saved || 'light';
   });
+  const [isSimulationOpen, setIsSimulationOpen] = useState(false);
 
   // Handle URL hash changes for dedicated page routes (e.g., #/listings/100-1000042)
   useEffect(() => {
@@ -57,8 +60,12 @@ const AppContent = () => {
 
   // Parse route parameters for dedicated property detail view (e.g. listings/100-5000042)
   const routeParts = currentRoute.split('/');
-  const mainTab = routeParts[0] || 'listings';
+  const rawTab = routeParts[0] || 'listings';
   const detailId = routeParts[1];
+
+  // Prevent blank screens if URL hash is 'login' or unknown by defaulting to 'listings'
+  const validTabs = ['listings', 'rentals', 'projects', 'saved', 'insights'];
+  const mainTab = validTabs.includes(rawTab) ? rawTab : 'listings';
 
   return (
     <div className="app-container">
@@ -67,6 +74,7 @@ const AppContent = () => {
         setActiveTab={(tab) => navigateTo(tab)}
         theme={theme}
         toggleTheme={toggleTheme}
+        onOpenSimulation={() => setIsSimulationOpen(true)}
       />
 
       <main className="main-content">
@@ -95,6 +103,42 @@ const AppContent = () => {
           </>
         )}
       </main>
+
+      {/* Floating 3D Simulation Button - Accessible across all post-login screens */}
+      <button
+        onClick={() => setIsSimulationOpen(true)}
+        style={{
+          position: 'fixed',
+          bottom: 28,
+          right: 28,
+          zIndex: 999,
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 9,
+          padding: '12px 20px',
+          borderRadius: 30,
+          background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
+          color: '#ffffff',
+          fontWeight: 800,
+          fontSize: '0.92rem',
+          border: '1px solid rgba(255, 255, 255, 0.4)',
+          boxShadow: '0 8px 24px rgba(37, 99, 235, 0.45)',
+          cursor: 'pointer',
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.03)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; }}
+        title="Launch 3D Spatial Simulation"
+      >
+        <Sparkles size={18} />
+        <span>3D Simulation</span>
+      </button>
+
+      {/* Interactive 3D Spatial Simulation Modal */}
+      <SimulationModal
+        isOpen={isSimulationOpen}
+        onClose={() => setIsSimulationOpen(false)}
+      />
 
       <Footer />
     </div>

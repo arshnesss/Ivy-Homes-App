@@ -24,6 +24,7 @@ export const LoginPage = () => {
     e.preventDefault();
     try {
       await login(email, password);
+      window.location.hash = '#/listings';
     } catch (err) {
       console.error('Login submit error:', err);
     }

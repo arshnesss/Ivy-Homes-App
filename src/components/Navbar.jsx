@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useFavourites } from '../context/FavouritesContext';
 import { Home, Building2, Key, Bookmark, BarChart3, LogOut, Sun, Moon, Sparkles } from 'lucide-react';
 
-export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme }) => {
+export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimulation }) => {
   const { user, logout } = useAuth();
   const { favourites } = useFavourites();
 
@@ -78,8 +78,31 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme }) => {
           })}
         </nav>
 
-        {/* User Session & Theme Controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* User Session, 3D Simulation & Theme Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {/* Easy Access 3D Simulation Button */}
+          <button
+            onClick={onOpenSimulation}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '7px 14px',
+              borderRadius: 10,
+              background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(5, 150, 105, 0.12))',
+              border: '1px solid rgba(37, 99, 235, 0.3)',
+              color: 'var(--primary)',
+              fontWeight: 700,
+              fontSize: '0.84rem',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            title="Open 3D Spatial Simulation"
+          >
+            <Sparkles size={15} />
+            <span>3D Simulation</span>
+          </button>
+
           <button
             onClick={toggleTheme}
             style={{
@@ -89,7 +112,8 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme }) => {
               color: 'var(--text-main)',
               border: '1px solid var(--border-color)',
               display: 'flex',
-              alignItems: 'center'
+              alignItems: 'center',
+              cursor: 'pointer'
             }}
             title="Toggle Theme"
           >
