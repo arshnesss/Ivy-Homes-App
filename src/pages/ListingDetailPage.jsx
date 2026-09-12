@@ -332,6 +332,15 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <button
+                onClick={() => alert(`Inspection inquiry confirmed for ${item.apartment_name || item.listing_id}. The Ivy Homes Mumbai concierge will follow up.`)}
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center', padding: '12px 20px', cursor: 'pointer' }}
+              >
+                <Calendar size={18} />
+                <span>Schedule Verified Visit</span>
+              </button>
+
+              <button
                 onClick={() => toggleFavourite(item)}
                 className="btn-secondary"
                 style={{ width: '100%', justifyContent: 'center', borderColor: saved ? 'var(--primary)' : 'var(--border-color)', color: saved ? 'var(--primary)' : 'var(--text-main)' }}
@@ -339,33 +348,18 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
                 <Bookmark size={18} fill={saved ? 'currentColor' : 'none'} />
                 <span>{saved ? 'Saved in Favourites' : 'Save Property'}</span>
               </button>
-
-              {item.posted_by_contact ? (
-                <a
-                  href={`tel:${item.posted_by_contact}`}
-                  className="btn-primary"
-                  style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', padding: '12px 20px' }}
-                >
-                  <Phone size={18} />
-                  <span>Call {item.posted_by_name || item.posted_by_contact}</span>
-                </a>
-              ) : (
-                <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)', padding: '8px 0' }}>
-                  Contact not disclosed by seller
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Seller Profile Card */}
+          {/* Listing Representation Card */}
           <div className="glass-panel" style={{ padding: 20 }}>
             <h4 style={{ fontSize: '1rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <User size={16} color="var(--primary)" /> Posted By
+              <User size={16} color="var(--primary)" /> Listing Representation
             </h4>
             
             {item.posted_by_name && (
               <div style={{ fontSize: '0.92rem', marginBottom: 6 }}>
-                <strong>Name:</strong> {item.posted_by_name}
+                <strong>Representative:</strong> {item.posted_by_name}
               </div>
             )}
 
@@ -375,11 +369,9 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
               </div>
             )}
 
-            {item.posted_by_contact && (
-              <div style={{ fontSize: '0.92rem', marginBottom: 12 }}>
-                <strong>Phone:</strong> {item.posted_by_contact}
-              </div>
-            )}
+            <div style={{ fontSize: '0.88rem', marginBottom: 8, color: 'var(--text-muted)' }}>
+              <strong>Channel:</strong> Verified Direct Listing via Ivy Homes Mumbai
+            </div>
 
             {item.posted_at && (
               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>

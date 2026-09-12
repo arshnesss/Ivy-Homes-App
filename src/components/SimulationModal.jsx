@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Powai3DMap } from './Powai3DMap';
-import { City3DBackground } from './City3DBackground';
-import { X, Compass, Building, Sparkles, Maximize2 } from 'lucide-react';
+import { X, Compass, Sparkles, MapPin } from 'lucide-react';
 
 export const SimulationModal = ({ isOpen, onClose }) => {
-  const [simulationMode, setSimulationMode] = useState('powai'); // 'powai' | 'skyline'
-
   if (!isOpen) return null;
 
   return (
@@ -28,7 +25,7 @@ export const SimulationModal = ({ isOpen, onClose }) => {
       <div
         style={{
           width: '100%',
-          maxWidth: 1200,
+          maxWidth: 1240,
           margin: 'auto',
           background: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
@@ -67,112 +64,61 @@ export const SimulationModal = ({ isOpen, onClose }) => {
                 boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
               }}
             >
-              <Sparkles size={20} />
+              <Compass size={20} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.1, color: 'var(--text-main)' }}>
-                3D Interactive Simulation
-              </h2>
-              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                Real-Time Three.js WebGL Spatial Visualization
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.1, color: 'var(--text-main)' }}>
+                  Powai 3D Locality Simulation
+                </h2>
+                <span
+                  style={{
+                    padding: '2px 8px',
+                    borderRadius: 6,
+                    background: 'rgba(37, 99, 235, 0.12)',
+                    color: '#2563EB',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  Assigned Micro-Market
+                </span>
+              </div>
+              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                Real-Time Three.js Spatial Map • 100 Verified Listings • Corrupt & Bait Anomaly Detection
               </span>
             </div>
           </div>
 
-          {/* Mode Switcher Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button
-              onClick={() => setSimulationMode('powai')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '8px 14px',
-                borderRadius: 10,
-                fontSize: '0.84rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: simulationMode === 'powai' ? '1px solid #2563EB' : '1px solid var(--border-color)',
-                background: simulationMode === 'powai' ? '#2563EB' : 'var(--bg-card)',
-                color: simulationMode === 'powai' ? '#ffffff' : 'var(--text-main)',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Compass size={15} />
-              <span>Powai 3D Locality Map</span>
-            </button>
-
-            <button
-              onClick={() => setSimulationMode('skyline')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '8px 14px',
-                borderRadius: 10,
-                fontSize: '0.84rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: simulationMode === 'skyline' ? '1px solid #2563EB' : '1px solid var(--border-color)',
-                background: simulationMode === 'skyline' ? '#2563EB' : 'var(--bg-card)',
-                color: simulationMode === 'skyline' ? '#ffffff' : 'var(--text-main)',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <Building size={15} />
-              <span>Mumbai 3D Skyline</span>
-            </button>
-
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             {/* Close Button */}
             <button
               onClick={onClose}
               style={{
-                padding: '8px',
+                padding: '8px 14px',
                 borderRadius: 10,
                 background: 'var(--bg-card)',
                 border: '1px solid var(--border-color)',
                 color: 'var(--text-main)',
                 cursor: 'pointer',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                marginLeft: 8,
+                gap: 6,
+                fontSize: '0.84rem',
+                fontWeight: 700,
+                transition: 'all 0.2s ease',
               }}
               title="Close Simulation"
             >
-              <X size={18} />
+              <X size={16} />
+              <span>Close</span>
             </button>
           </div>
         </div>
 
-        {/* 3D Viewport Body */}
-        <div style={{ flex: 1, position: 'relative', minHeight: 520, overflow: 'hidden', background: '#0B0F19' }}>
-          {simulationMode === 'powai' ? (
-            <div style={{ height: '100%', minHeight: 520 }}>
-              <Powai3DMap />
-            </div>
-          ) : (
-            <div style={{ height: '100%', minHeight: 520, position: 'relative' }}>
-              <City3DBackground />
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 20,
-                  left: 20,
-                  background: 'rgba(15, 23, 42, 0.85)',
-                  backdropFilter: 'blur(8px)',
-                  padding: '10px 16px',
-                  borderRadius: 12,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  color: '#F8FAFC',
-                  fontSize: '0.82rem',
-                }}
-              >
-                <div style={{ fontWeight: 700, color: '#38BDF8', marginBottom: 2 }}>Mumbai Micro-Market Skyline Model</div>
-                <div style={{ color: '#94A3B8', fontSize: '0.74rem' }}>Interactive procedural architectural geometry with ambient evening lighting</div>
-              </div>
-            </div>
-          )}
+        {/* 3D Viewport Body - Exclusively Powai 3D Map */}
+        <div style={{ flex: 1, position: 'relative', minHeight: 560, overflow: 'hidden', background: '#0B0F19' }}>
+          <Powai3DMap />
         </div>
       </div>
     </div>

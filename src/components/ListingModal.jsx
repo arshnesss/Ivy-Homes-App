@@ -148,14 +148,14 @@ export const ListingModal = ({ item, onClose, isRental = false }) => {
             </div>
           </div>
 
-          <a
-            href={`tel:${item.posted_by_contact || ''}`}
+          <button
+            onClick={() => alert(`Inspection inquiry confirmed for ${item.apartment_name || item.listing_id}. The Ivy Homes concierge will follow up.`)}
             className="btn-primary"
-            style={{ textDecoration: 'none' }}
+            style={{ cursor: 'pointer' }}
           >
-            <Phone size={16} />
-            <span>{item.posted_by_contact || 'Call Seller'}</span>
-          </a>
+            <Calendar size={16} />
+            <span>Schedule Inspection</span>
+          </button>
         </div>
 
         {/* Similar Listings Strip */}

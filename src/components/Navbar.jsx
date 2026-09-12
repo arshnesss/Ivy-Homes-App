@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useFavourites } from '../context/FavouritesContext';
-import { Home, Building2, Key, Bookmark, BarChart3, LogOut, Sun, Moon, Sparkles } from 'lucide-react';
+import { Home, Building2, Key, Bookmark, BarChart3, LogOut, Sun, Moon, Sparkles, User } from 'lucide-react';
 
 export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimulation }) => {
   const { user, logout } = useAuth();
@@ -121,19 +121,57 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme, onOpenSimu
           </button>
 
           {user && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'var(--bg-elevated)', padding: '6px 12px', borderRadius: 12, border: '1px solid var(--border-color)' }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
-              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
-                {user.email}
-              </span>
-              <button
-                onClick={logout}
-                style={{ padding: 4, color: 'var(--danger)', marginLeft: 4, display: 'flex', alignItems: 'center' }}
-                title="Log Out"
+            <>
+              {/* Profile Badge */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '6px 12px',
+                  borderRadius: 10,
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-main)',
+                  fontSize: '0.84rem',
+                  fontWeight: 600,
+                }}
+                title={`Active Session: ${user.email}`}
               >
-                <LogOut size={16} />
+                <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#2563EB', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <User size={13} />
+                </div>
+                <span style={{ maxWidth: 160, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user.email}
+                </span>
+              </div>
+
+              {/* Sign Out Button with Clear Text Label */}
+              <button
+                onClick={() => {
+                  logout();
+                  window.location.hash = '#/login';
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '7px 14px',
+                  borderRadius: 10,
+                  background: '#FEF2F2',
+                  color: '#DC2626',
+                  border: '1px solid #FECACA',
+                  fontSize: '0.84rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+                title="Sign out of Ivy Homes"
+              >
+                <LogOut size={15} />
+                <span>Sign Out</span>
               </button>
-            </div>
+            </>
           )}
         </div>
 
