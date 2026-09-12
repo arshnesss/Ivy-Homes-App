@@ -108,18 +108,18 @@ button {
 
 .main-content {
   flex: 1;
-  max-width: 1280px;
+  max-width: 1380px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  padding: 32px 28px 80px;
 }
 
 /* Buttons */
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   color: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 11px 22px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 0.95rem;
   display: inline-flex;
@@ -138,10 +138,10 @@ button {
   background: var(--bg-elevated);
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 500;
-  font-size: 0.95rem;
+  padding: 11px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.92rem;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -155,15 +155,15 @@ button {
 
 /* Badges */
 .badge {
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.74rem;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
 }
 
 .badge-live {
@@ -193,16 +193,16 @@ button {
 /* Cards Grid */
 .grid-listings {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
 }
 
 /* Property Card */
 .property-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 24px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
