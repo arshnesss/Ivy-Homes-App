@@ -2,10 +2,44 @@
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Theme colors - Dark Mode Default */
+  /* Theme colors - Light Mode Default (Authentic Ivy Homes Brand) */
+  --bg-dark: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F1F5F9;
+  --bg-elevated: #F1F5F9;
+  --border-color: #E2E8F0;
+  --border-focus: #2563EB;
+
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --text-inverse: #FFFFFF;
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-light: rgba(37, 99, 235, 0.08);
+
+  --accent: #059669;
+  --accent-light: rgba(5, 150, 105, 0.08);
+
+  --warning: #D97706;
+  --warning-light: rgba(217, 119, 6, 0.08);
+
+  --danger: #DC2626;
+  --danger-light: rgba(220, 38, 38, 0.08);
+
+  --purple: #7C3AED;
+  --purple-light: rgba(124, 58, 237, 0.08);
+
+  --glass-bg: #FFFFFF;
+  --glass-border: #E2E8F0;
+  --shadow-lg: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+  --shadow-glow: 0 4px 14px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme='dark'] {
   --bg-dark: #0B0F19;
-  --bg-card: rgba(17, 24, 39, 0.7);
-  --bg-card-hover: rgba(30, 41, 59, 0.8);
+  --bg-card: #111827;
+  --bg-card-hover: #1E293B;
   --bg-elevated: #1E293B;
   --border-color: rgba(255, 255, 255, 0.1);
   --border-focus: #3B82F6;
@@ -21,37 +55,10 @@
   --accent: #10B981;
   --accent-light: rgba(16, 185, 129, 0.15);
 
-  --warning: #F59E0B;
-  --warning-light: rgba(245, 158, 11, 0.15);
-
-  --danger: #EF4444;
-  --danger-light: rgba(239, 68, 68, 0.15);
-
-  --purple: #8B5CF6;
-  --purple-light: rgba(139, 92, 246, 0.15);
-
-  --glass-bg: rgba(15, 23, 42, 0.65);
+  --glass-bg: rgba(17, 24, 39, 0.85);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --shadow-lg: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.25);
-}
-
-[data-theme='light'] {
-  --bg-dark: #F8FAFC;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-card-hover: #FFFFFF;
-  --bg-elevated: #F1F5F9;
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-focus: #2563EB;
-
-  --text-main: #0F172A;
-  --text-muted: #64748B;
-  --text-inverse: #F8FAFC;
-
-  --glass-bg: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-  --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
 }
 
 * {

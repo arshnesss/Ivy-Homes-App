@@ -16,7 +16,15 @@ const AppContent = () => {
   const [currentRoute, setCurrentRoute] = useState(() => {
     return window.location.hash.replace('#/', '') || 'listings';
   });
-  const [theme, setTheme] = useState(() => localStorage.getItem('ivy_theme') || 'dark');
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('ivy_theme');
+    // If previous session had dark cached, reset to light per user request
+    if (saved === 'dark') {
+      localStorage.setItem('ivy_theme', 'light');
+      return 'light';
+    }
+    return saved || 'light';
+  });
 
   // Handle URL hash changes for dedicated page routes (e.g., #/listings/100-1000042)
   useEffect(() => {

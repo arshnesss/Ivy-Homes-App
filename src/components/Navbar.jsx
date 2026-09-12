@@ -16,20 +16,29 @@ export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme }) => {
   ];
 
   return (
-    <header className="glass-panel" style={{ borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0, sticky: 'top', zIndex: 100 }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+    <header 
+      style={{ 
+        position: 'sticky', 
+        top: 0, 
+        zIndex: 100, 
+        background: 'var(--bg-card)', 
+        borderBottom: '1px solid var(--border-color)',
+        boxShadow: '0 1px 4px rgba(0, 0, 0, 0.03)'
+      }}
+    >
+      <div style={{ maxWidth: 1360, margin: '0 auto', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
         
-        {/* Brand Logo */}
+        {/* Authentic Brand Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => setActiveTab('listings')}>
-          <div style={{ background: 'linear-gradient(135deg, #3B82F6, #10B981)', padding: 8, borderRadius: 12, color: '#fff', display: 'flex' }}>
-            <Sparkles size={22} />
+          <div style={{ background: 'linear-gradient(135deg, #2563EB, #1D4ED8)', padding: '7px 9px', borderRadius: 10, color: '#fff', display: 'flex', boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)' }}>
+            <Sparkles size={18} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', lineHeight: 1.1, background: 'linear-gradient(135deg, #60A5FA, #34D399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Ivy Homes
-            </h1>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.05em' }}>
-              MUMBAI PORTAL
+            <div style={{ fontSize: '1.3rem', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-main)' }}>
+              ivy <span style={{ color: 'var(--primary)', fontWeight: 600 }}>homes</span>
+            </div>
+            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+              Mumbai Micro-Markets
             </span>
           </div>
         </div>

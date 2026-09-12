@@ -4,7 +4,8 @@ import { formatPrice, ListingCard } from '../components/ListingCard';
 import { useFavourites } from '../context/FavouritesContext';
 import { 
   ArrowLeft, MapPin, Bed, Bath, Maximize2, Phone, User, Calendar, 
-  AlertTriangle, Bookmark, ShieldCheck, Flame, Compass, Car, Building
+  AlertTriangle, Bookmark, ShieldCheck, Flame, Compass, Car, Building,
+  Building2, Key, Home, Sparkles, CheckCircle2
 } from 'lucide-react';
 
 export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
@@ -27,36 +28,31 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
         if (!isMounted) return;
         setItem(data);
 
-        // Fetch similar listings
+        // Fetch similar listings in same locality with matching bedrooms
         if (!isRental && data) {
           try {
-            let simData = await api.getSimilarListings(listingId);
-            // If backend /similar endpoint returned empty (due to 404 missing endpoint), fallback to locality listings
-            if (!simData || simData.length === 0) {
-              const locRes = await api.getListings({ locality: data.locality, limit: 5 });
-              simData = (locRes.results || []).filter(x => x.listing_id !== listingId);
-            }
+            const locRes = await api.getListings({ 
+              locality: data.locality, 
+              bhk: data.bedroom,
+              limit: 6 
+            });
+            const simData = (locRes.results || []).filter(x => x.listing_id !== listingId);
             if (isMounted) {
               setSimilar(simData.slice(0, 4));
             }
           } catch (e) {
-            console.warn('Similar listings fetch silent fallback:', e);
+            console.warn('Similar listings fallback note:', e);
           }
         }
       } catch (err) {
-        if (isMounted) {
-          setError(err.message || 'Failed to load property details.');
-        }
+        console.error('Failed to load listing detail:', err);
+        if (isMounted) setError(err.message || 'Unable to load property details');
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
-    if (listingId) {
-      fetchDetail();
-    }
+    fetchDetail();
     return () => { isMounted = false; };
   }, [listingId, isRental]);
 
@@ -107,17 +103,96 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
         </span>
       </div>
 
-      {/* Main Page Layout Header */}
-      <div className="glass-panel" style={{ padding: 28, marginBottom: 28 }}>
-        
-        {/* Badges Row */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
-          {item.is_live && <span className="badge badge-live">Live Active</span>}
-          {item.is_verified && <span className="badge badge-verified"><ShieldCheck size={13} /> Verified Listing</span>}
-          {item.is_corrupt && <span className="badge badge-corrupt"><AlertTriangle size={13} /> Corrupt Data Anomaly</span>}
-          {item.is_fake && <span className="badge badge-fake"><Flame size={13} /> Bait Rental Price Listing</span>}
+      {/* Eye-Soothing Photo Hero Banner */}
+      <div
+        className="glass-panel"
+        style={{
+          height: 320,
+          borderRadius: 20,
+          overflow: 'hidden',
+          position: 'relative',
+          marginBottom: 24,
+          background: 'linear-gradient(135deg, #F0F7FF 0%, #E2EEFE 50%, #D0E4FD 100%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '1px solid var(--border-color)',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+        }}
+      >
+        {/* Subtle decorative architectural blueprint lines */}
+        <div 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.08) 1px, transparent 0)',
+            backgroundSize: '20px 20px',
+            pointerEvents: 'none',
+          }} 
+        />
+
+        <div
+          style={{
+            width: 76,
+            height: 76,
+            borderRadius: 22,
+            background: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#1D4ED8',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9)',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            marginBottom: 12,
+            zIndex: 1,
+          }}
+        >
+          {isRental ? <Key size={34} strokeWidth={1.8} /> : (item.property_type === 'villa' ? <Home size={34} strokeWidth={1.8} /> : <Building2 size={34} strokeWidth={1.8} />)}
+        </div>
+        <span style={{ fontSize: '0.96rem', fontWeight: 700, color: '#1E293B', zIndex: 1, letterSpacing: '-0.01em' }}>
+          {item.apartment_name || 'Verified Residence'} • Floorplan & Photography
+        </span>
+        <span style={{ fontSize: '0.78rem', color: '#64748B', marginTop: 3, zIndex: 1, fontWeight: 500 }}>
+          {item.locality || 'Mumbai'}, Maharashtra • Verified Micro-market Listing
+        </span>
+
+        {/* Floating Badges on Photo */}
+        <div style={{ position: 'absolute', top: 16, left: 16, display: 'flex', gap: 8, flexWrap: 'wrap', zIndex: 2 }}>
+          {item.is_live && <span className="badge badge-live" style={{ backdropFilter: 'blur(6px)' }}>Live Active</span>}
+          {item.is_verified && <span className="badge badge-verified" style={{ backdropFilter: 'blur(6px)' }}><ShieldCheck size={13} /> Verified Listing</span>}
+          {item.is_corrupt && <span className="badge badge-corrupt" style={{ backdropFilter: 'blur(6px)' }}><AlertTriangle size={13} /> Corrupt Data Anomaly</span>}
+          {item.is_fake && <span className="badge badge-fake" style={{ backdropFilter: 'blur(6px)' }}><Flame size={13} /> Bait Rental Price</span>}
         </div>
 
+        {/* Photo Gallery Counter Pill on bottom right */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 16,
+            right: 16,
+            padding: '6px 14px',
+            borderRadius: 10,
+            background: 'rgba(255, 255, 255, 0.92)',
+            color: '#1E293B',
+            fontSize: '0.76rem',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.8)',
+            zIndex: 2,
+          }}
+        >
+          <Sparkles size={13} color="#2563EB" />
+          <span>High-Resolution Photo Suite</span>
+        </div>
+      </div>
+
+      {/* Main Page Layout Header */}
+      <div className="glass-panel" style={{ padding: 28, marginBottom: 28, borderRadius: 20 }}>
         {/* Title and Location */}
         <h1 style={{ fontSize: '2.2rem', lineHeight: 1.2, marginBottom: 10 }}>
           {item.apartment_name || item.title || 'Property Listing'}
@@ -129,7 +204,6 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
           {item.property_type && <span style={{ textTransform: 'capitalize' }}>• {item.property_type}</span>}
           {item.website && <span>• Source: {item.website}</span>}
         </div>
-
       </div>
 
       {/* 2-Column Content Grid */}
@@ -144,7 +218,7 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
               <h3 style={{ color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                 <AlertTriangle size={20} /> Data Quality Anomaly Detected
               </h3>
-              <p style={{ fontSize: '0.9rem', color: '#FCA5A5', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '0.9rem', color: '#991B1B', lineHeight: 1.5, fontWeight: 500 }}>
                 This record describes physical impossibilities (such as floor level exceeding total building floors or negative pricing). It has been identified as part of our automated API data quality audit.
               </p>
             </div>
@@ -266,38 +340,52 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
                 <span>{saved ? 'Saved in Favourites' : 'Save Property'}</span>
               </button>
 
-              <a
-                href={`tel:${item.posted_by_contact || ''}`}
-                className="btn-primary"
-                style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', padding: '12px 20px' }}
-              >
-                <Phone size={18} />
-                <span>Call {item.posted_by_name || 'Seller'}</span>
-              </a>
+              {item.posted_by_contact ? (
+                <a
+                  href={`tel:${item.posted_by_contact}`}
+                  className="btn-primary"
+                  style={{ width: '100%', justifyContent: 'center', textDecoration: 'none', padding: '12px 20px' }}
+                >
+                  <Phone size={18} />
+                  <span>Call {item.posted_by_name || item.posted_by_contact}</span>
+                </a>
+              ) : (
+                <div style={{ textAlign: 'center', fontSize: '0.82rem', color: 'var(--text-muted)', padding: '8px 0' }}>
+                  Contact not disclosed by seller
+                </div>
+              )}
             </div>
           </div>
 
           {/* Seller Profile Card */}
           <div className="glass-panel" style={{ padding: 20 }}>
             <h4 style={{ fontSize: '1rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <User size={16} color="var(--primary)" /> Seller Contact Details
+              <User size={16} color="var(--primary)" /> Posted By
             </h4>
             
-            <div style={{ fontSize: '0.92rem', marginBottom: 6 }}>
-              <strong>Name:</strong> {item.posted_by_name || 'Verified Partner'}
-            </div>
+            {item.posted_by_name && (
+              <div style={{ fontSize: '0.92rem', marginBottom: 6 }}>
+                <strong>Name:</strong> {item.posted_by_name}
+              </div>
+            )}
 
-            <div style={{ fontSize: '0.92rem', marginBottom: 6 }}>
-              <strong>Type:</strong> <span style={{ textTransform: 'capitalize' }}>{item.posted_by || 'agent'}</span>
-            </div>
+            {item.posted_by && (
+              <div style={{ fontSize: '0.92rem', marginBottom: 6 }}>
+                <strong>Role:</strong> <span style={{ textTransform: 'capitalize' }}>{item.posted_by}</span>
+              </div>
+            )}
 
-            <div style={{ fontSize: '0.92rem', marginBottom: 12 }}>
-              <strong>Phone:</strong> {item.posted_by_contact || 'Available on request'}
-            </div>
+            {item.posted_by_contact && (
+              <div style={{ fontSize: '0.92rem', marginBottom: 12 }}>
+                <strong>Phone:</strong> {item.posted_by_contact}
+              </div>
+            )}
 
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <Calendar size={12} /> Posted on {item.posted_at ? new Date(item.posted_at).toLocaleDateString() : 'Recent'}
-            </div>
+            {item.posted_at && (
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Calendar size={12} /> Posted on {new Date(item.posted_at).toLocaleDateString()}
+              </div>
+            )}
           </div>
 
         </div>

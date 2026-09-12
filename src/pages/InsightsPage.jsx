@@ -1,34 +1,94 @@
 import React, { useState } from 'react';
-import { MatrixDecryptCard } from '../components/MatrixDecryptCard';
 import { Powai3DMap } from '../components/Powai3DMap';
 import {
-  ShieldAlert,
+  FileText,
   AlertTriangle,
   Flame,
-  FileText,
-  RotateCw,
-  Terminal,
   Compass,
-  Database,
-  Search,
-  CheckCircle2
+  CheckCircle2,
+  HelpCircle,
+  Clock,
+  Building,
+  DollarSign,
+  TrendingUp,
+  ShieldCheck,
+  Search
 } from 'lucide-react';
 
 export const InsightsPage = () => {
-  const [activeTab, setActiveTab] = useState('map'); // 'map' | 'audit' | 'corrupt' | 'fake'
-  const [matrixTrigger, setMatrixTrigger] = useState(0);
+  const [activeTab, setActiveTab] = useState('answers'); // 'answers' | 'map' | 'audit' | 'corrupt' | 'fake'
 
-  const metricsData = [
-    { q: 'Q1', title: 'Total Listing Records', value: '4,950', note: 'Envelope claims 4,907 (43 hidden)', color: '#38bdf8' },
-    { q: 'Q2', title: 'Unique Physical Properties', value: '4,931', note: '19 duplicate cross-agency clusters', color: '#10b981' },
-    { q: 'Q3', title: 'Active Live Listings', value: '3,892', note: 'Filtered for is_live === true', color: '#34d399' },
-    { q: 'Q4', title: 'Corrupt Listing Records', value: '41', note: 'Physical impossibilities detected', color: '#ef4444' },
-    { q: 'Q5', title: 'Powai Total Monthly Rent', value: '₹77,24,700', note: '215 Powai rental units aggregated', color: '#f59e0b' },
-    { q: 'Q6', title: '2BHK Avg Price / sqft', value: '₹62,691.14', note: 'Active 2BHKs excl. corrupt & bait', color: '#8b5cf6' },
-    { q: 'Q7', title: 'Costliest Project', value: '₹12.44 Cr', note: 'Assetz Serenity (P50016)', color: '#ec4899' },
-    { q: 'Q8', title: 'Listings Last 7 Days', value: '146', note: 'IST Reference Moment 2026-09-10', color: '#06b6d4' },
-    { q: 'Q9', title: 'Bait / Fake Sale Listings', value: '11', note: 'Rental prices in sale directory', color: '#f97316' },
-    { q: 'Q10', title: 'Projects With Wrong Count', value: '443', note: '443/590 projects report wrong count', color: '#a855f7' },
+  const questionsReport = [
+    {
+      num: 'Question 1',
+      title: 'Total Listing Records Retrievable',
+      answer: '4,950 Records',
+      summary: 'API envelope header claims total: 4,907, but full pagination retrievable count is 4,950.',
+      methodology: 'By exhaustively paginating through offset parameter (0 to 4900, limit 50), the API delivers records past 4,907 up to offset 4900 (limit 50), yielding exactly 4,950 valid JSON listing items. The envelope total is inaccurate by 43 records.'
+    },
+    {
+      num: 'Question 2',
+      title: 'Unique Physical Properties (Deduplicated)',
+      answer: '4,931 Properties',
+      summary: '19 cross-broker duplicate clusters (38 records) describe identical physical units.',
+      methodology: 'Grouped by normalized tuple (apartment_name, locality, carpet_area, floor). Across major portals (99acres, housing, magicbricks, nobroker, squareyards), 38 records represent identical physical apartments listed by competing brokers. Subtracting the 19 redundant duplicates yields 4,931 unique physical residences.'
+    },
+    {
+      num: 'Question 3',
+      title: 'Active Live Listings',
+      answer: '3,892 Listings',
+      summary: 'Calculated by strictly filtering for is_live === true across all records.',
+      methodology: 'Out of 4,950 retrievable records, 3,892 have is_live = true, while 1,058 listings are inactive, de-listed, or archived.'
+    },
+    {
+      num: 'Question 4',
+      title: 'Corrupt Listing Records',
+      answer: '41 Listing IDs',
+      summary: 'Identified records containing physical impossibilities and data corruption.',
+      methodology: 'Identified 41 records with severe data defects: (1) Floor number greater than total building floors (e.g. Floor 18 of 10), (2) Negative sale prices (e.g. -₹6.46 Cr), (3) Carpet area exceeding super built-up area, and (4) Swapped latitude and longitude (lat > 70°, lng < 25°). All 41 sorted IDs are documented in submission.json.'
+    },
+    {
+      num: 'Question 5',
+      title: 'Total Monthly Rent in Assigned Locality (Powai)',
+      answer: '₹77,24,700 / month',
+      summary: 'Aggregated monthly rental yield across all 215 verified rental properties in Powai.',
+      methodology: 'Paginating the entire rental collection (2,050 records) and filtering strictly for assigned locality "powai" (case-insensitive) yields exactly 215 rental units. Summing their monthly rental amounts yields exactly ₹77,24,700.'
+    },
+    {
+      num: 'Question 6',
+      title: 'Average Price per Sq Ft for 2BHKs',
+      answer: '₹62,691.14 / sqft',
+      summary: 'Calculated across active 2BHK sale listings excluding corrupt and bait records.',
+      methodology: 'Filtered for bedroom == 2, is_live == true, carpet_area > 0, price > 0, excluding the 41 corrupt and 11 bait listings. Computed sum(price / carpet_area) / N, yielding ₹62,691.14 per sqft.'
+    },
+    {
+      num: 'Question 7',
+      title: 'Costliest Project by Maximum Price',
+      answer: 'Assetz Serenity (P50016) — ₹12.44 Cr',
+      summary: 'Project price_min and price_max are denominated in Crores, not Rupees.',
+      methodology: 'In /v1/projects, price_max represents Crores of INR (discrepancy with API reference claiming raw Rupees). Assetz Serenity has price_max = 12.44, representing ₹12.44 Crores (124,400,000 INR), making it the costliest project.'
+    },
+    {
+      num: 'Question 8',
+      title: 'Listings Posted in the Last 7 Days',
+      answer: '146 Listings',
+      summary: 'Anchored strictly to reference moment 2026-09-10T00:00:00+05:30 (IST).',
+      methodology: 'Normalized ISO naive timestamps to IST (+05:30). Filtered records with posted_at in the 7-day interval [2026-09-03T00:00:00+05:30, 2026-09-10T00:00:00+05:30). Exactly 146 listings fall within this window.'
+    },
+    {
+      num: 'Question 9',
+      title: 'Bait / Fake Sale Listings',
+      answer: '11 Listing IDs',
+      summary: 'Monthly rental rates (₹17k - ₹44k) fraudulently listed as property sale prices.',
+      methodology: 'Isolated 11 sale records with prices between ₹17,470 and ₹44,440. These are monthly rental figures entered under sale listings to fabricate low-price search rankings. All 11 IDs are documented in submission.json.'
+    },
+    {
+      num: 'Question 10',
+      title: 'Projects with Discrepant Listing Counts',
+      answer: '443 Projects',
+      summary: '443 out of 590 projects report a total_listings figure that mismatches actual listings.',
+      methodology: 'Compared reported total_listings in /v1/projects against the actual count of listings bearing each project_id in /v1/listings. 443 projects show discrepancies between reported and actual counts.'
+    }
   ];
 
   const findingsList = [
@@ -50,100 +110,36 @@ export const InsightsPage = () => {
     { id: 16, category: 'missing_endpoint', endpoint: '/v1/listings/{id}/similar', doc: 'GET /v1/listings/{id}/similar returns up to 10 comparable listings', actual: 'Endpoint returns HTTP 404 Not Found for all listing IDs' }
   ];
 
-  const handleRerunMatrix = () => {
-    setMatrixTrigger((prev) => prev + 1);
-  };
-
   return (
-    <div className="animate-fade-in" style={{ paddingBottom: 40 }}>
-      {/* Page Header with Detective Matrix Controls */}
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 16,
-          marginBottom: 28,
-        }}
-      >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-            <h1 style={{ fontSize: '2.2rem', fontWeight: 900, letterSpacing: '-0.03em' }}>
-              Detective Insights & Forensic Audit
-            </h1>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '4px 12px',
-                borderRadius: 20,
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.35)',
-                color: '#10b981',
-                fontSize: '0.74rem',
-                fontWeight: 800,
-                fontFamily: 'monospace',
-              }}
-            >
-              <CheckCircle2 size={12} color="#10b981" />
-              <span>10/10 VERIFIED</span>
-            </span>
-          </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.94rem', maxWidth: 780 }}>
-            Forensic analysis of the Mumbai property dataset • Reference Moment: <strong>2026-09-10T00:00:00+05:30</strong> • Assigned Locality: <strong>Powai</strong>
-          </p>
+    <div className="animate-fade-in" style={{ maxWidth: 1360, margin: '0 auto', paddingBottom: 60 }}>
+      
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
+            Data Insights & Forensic Audit
+          </h1>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              padding: '4px 10px',
+              borderRadius: 14,
+              background: 'rgba(16, 185, 129, 0.12)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              color: '#10b981',
+              fontSize: '0.74rem',
+              fontWeight: 700,
+            }}
+          >
+            <CheckCircle2 size={13} />
+            <span>10/10 Verified</span>
+          </span>
         </div>
-
-        {/* Matrix Re-run Action */}
-        <button
-          type="button"
-          onClick={handleRerunMatrix}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '10px 18px',
-            borderRadius: 12,
-            background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(139, 92, 246, 0.2))',
-            border: '1px solid rgba(56, 189, 248, 0.4)',
-            color: '#38bdf8',
-            fontWeight: 700,
-            fontSize: '0.85rem',
-            cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(56, 189, 248, 0.15)',
-            transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-2px)')}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
-        >
-          <RotateCw size={15} />
-          <span>↺ Re-run Matrix Decryption</span>
-        </button>
-      </div>
-
-      {/* The 10 Decrypting Matrix Metric Cards Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(225px, 1fr))',
-          gap: 16,
-          marginBottom: 32,
-        }}
-      >
-        {metricsData.map((m, idx) => (
-          <MatrixDecryptCard
-            key={m.q}
-            questionNumber={m.q}
-            title={m.title}
-            finalValue={m.value}
-            note={m.note}
-            color={m.color}
-            delayMs={idx * 110}
-            triggerKey={matrixTrigger}
-          />
-        ))}
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.96rem' }}>
+          Calculated answers for all 10 assignment questions, Powai assigned locality analysis, and documentation discrepancies
+        </p>
       </div>
 
       {/* Navigation Tabs */}
@@ -153,22 +149,36 @@ export const InsightsPage = () => {
           flexWrap: 'wrap',
           gap: 10,
           borderBottom: '1px solid var(--border-color)',
-          marginBottom: 24,
+          marginBottom: 28,
           paddingBottom: 12,
         }}
       >
         <button
+          onClick={() => setActiveTab('answers')}
+          className="btn-secondary"
+          style={{
+            background: activeTab === 'answers' ? 'var(--primary-light)' : 'transparent',
+            color: activeTab === 'answers' ? 'var(--primary)' : 'var(--text-main)',
+            borderColor: activeTab === 'answers' ? 'var(--primary)' : 'transparent',
+            fontWeight: 600,
+          }}
+        >
+          <FileText size={16} />
+          <span>The 10 Questions & Answers</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('map')}
           className="btn-secondary"
           style={{
-            background: activeTab === 'map' ? 'rgba(56, 189, 248, 0.18)' : 'transparent',
+            background: activeTab === 'map' ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
             color: activeTab === 'map' ? '#38bdf8' : 'var(--text-main)',
             borderColor: activeTab === 'map' ? '#38bdf8' : 'transparent',
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           <Compass size={16} />
-          <span>Low-Poly Powai 3D Map (100 Nodes)</span>
+          <span>Powai 3D Locality Map</span>
         </button>
 
         <button
@@ -178,11 +188,11 @@ export const InsightsPage = () => {
             background: activeTab === 'audit' ? 'var(--primary-light)' : 'transparent',
             color: activeTab === 'audit' ? 'var(--primary)' : 'var(--text-main)',
             borderColor: activeTab === 'audit' ? 'var(--primary)' : 'transparent',
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
-          <FileText size={16} />
-          <span>Documentation Lie Tracker (16 Findings)</span>
+          <ShieldCheck size={16} />
+          <span>API Documentation Discrepancies (16)</span>
         </button>
 
         <button
@@ -192,7 +202,7 @@ export const InsightsPage = () => {
             background: activeTab === 'corrupt' ? 'var(--danger-light)' : 'transparent',
             color: activeTab === 'corrupt' ? 'var(--danger)' : 'var(--text-main)',
             borderColor: activeTab === 'corrupt' ? 'var(--danger)' : 'transparent',
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           <AlertTriangle size={16} />
@@ -206,7 +216,7 @@ export const InsightsPage = () => {
             background: activeTab === 'fake' ? 'var(--warning-light)' : 'transparent',
             color: activeTab === 'fake' ? 'var(--warning)' : 'var(--text-main)',
             borderColor: activeTab === 'fake' ? 'var(--warning)' : 'transparent',
-            fontWeight: 700,
+            fontWeight: 600,
           }}
         >
           <Flame size={16} />
@@ -214,14 +224,91 @@ export const InsightsPage = () => {
         </button>
       </div>
 
-      {/* Tab 1: Low-Poly Powai 3D Map */}
+      {/* Tab 1: Comprehensive 10 Questions & Answers Report */}
+      {activeTab === 'answers' && (
+        <div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 20 }}>
+            {questionsReport.map((q) => (
+              <div
+                key={q.num}
+                className="glass-panel"
+                style={{
+                  padding: 24,
+                  borderRadius: 16,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        padding: '3px 8px',
+                        borderRadius: 6,
+                        background: 'var(--primary-light)',
+                        color: 'var(--primary)',
+                      }}
+                    >
+                      {q.num}
+                    </span>
+                  </div>
+
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: 8 }}>
+                    {q.title}
+                  </h3>
+
+                  <div
+                    style={{
+                      fontSize: '1.5rem',
+                      fontWeight: 800,
+                      color: 'var(--primary)',
+                      fontFamily: 'var(--font-heading)',
+                      marginBottom: 10,
+                    }}
+                  >
+                    {q.answer}
+                  </div>
+
+                  <div style={{ fontSize: '0.88rem', color: '#e2e8f0', marginBottom: 12, fontWeight: 500 }}>
+                    {q.summary}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--text-muted)',
+                    lineHeight: 1.5,
+                    borderTop: '1px solid var(--border-color)',
+                    paddingTop: 12,
+                    background: 'rgba(0, 0, 0, 0.15)',
+                    padding: '10px 12px',
+                    borderRadius: 8,
+                  }}
+                >
+                  <strong style={{ color: 'var(--text-main)', display: 'block', marginBottom: 2 }}>
+                    Detective Methodology:
+                  </strong>
+                  {q.methodology}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 2: Powai 3D Locality Map */}
       {activeTab === 'map' && <Powai3DMap />}
 
-      {/* Tab 2: Documentation Lie Tracker */}
+      {/* Tab 3: Documentation Lie Tracker */}
       {activeTab === 'audit' && (
-        <div className="glass-panel" style={{ padding: 24, borderRadius: 20 }}>
+        <div className="glass-panel" style={{ padding: 24, borderRadius: 16 }}>
           <h3 style={{ fontSize: '1.25rem', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <ShieldAlert size={20} color="var(--primary)" /> Verified Discrepancies between API Reference & Live Service (16 Findings)
+            <ShieldCheck size={20} color="var(--primary)" /> Verified Discrepancies between API Reference & Live Service (16 Findings)
           </h3>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem', textAlign: 'left' }}>
@@ -252,14 +339,14 @@ export const InsightsPage = () => {
         </div>
       )}
 
-      {/* Tab 3: Corrupt Listings Inspector */}
+      {/* Tab 4: Corrupt Listings */}
       {activeTab === 'corrupt' && (
-        <div className="glass-panel" style={{ padding: 24, borderRadius: 20 }}>
+        <div className="glass-panel" style={{ padding: 24, borderRadius: 16 }}>
           <h3 style={{ fontSize: '1.25rem', marginBottom: 8, color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: 8 }}>
             <AlertTriangle size={20} /> 41 Corrupt Property Listing Records (Question 4)
           </h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: 20 }}>
-            These 41 listings describe physical impossibilities such as floor 18 in a 10 floor building, negative pricing, carpet area exceeding super built-up area, or swapped coordinates.
+            These 41 listings describe physical impossibilities such as floor level exceeding total building floors, negative pricing, or swapped coordinates.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
             {[
@@ -282,9 +369,9 @@ export const InsightsPage = () => {
         </div>
       )}
 
-      {/* Tab 4: Fake/Bait Listings Inspector */}
+      {/* Tab 5: Bait Listings */}
       {activeTab === 'fake' && (
-        <div className="glass-panel" style={{ padding: 24, borderRadius: 20 }}>
+        <div className="glass-panel" style={{ padding: 24, borderRadius: 16 }}>
           <h3 style={{ fontSize: '1.25rem', marginBottom: 8, color: 'var(--warning)', display: 'flex', alignItems: 'center', gap: 8 }}>
             <Flame size={20} /> 11 Fake / Bait Sale Listings (Question 9)
           </h3>
@@ -304,6 +391,7 @@ export const InsightsPage = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

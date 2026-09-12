@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { City3DBackground } from '../components/City3DBackground';
 import { 
-  KeyRound, Mail, ArrowRight, ShieldCheck, Zap, Terminal, Activity, 
-  Sparkles, CheckCircle2, TrendingUp, DollarSign, Clock, FileCheck, 
-  Percent, Calendar, HelpCircle, ChevronRight, Search
+  Building2, ArrowRight, ShieldCheck, CheckCircle2, TrendingUp, 
+  FileCheck, Percent, Calendar, KeyRound, Mail, HelpCircle, 
+  ChevronDown, ChevronUp, Star, Phone, MessageSquare, Check, Sparkles
 } from 'lucide-react';
 
 export const LoginPage = () => {
@@ -12,38 +11,14 @@ export const LoginPage = () => {
   const [email, setEmail] = useState('demo1@ivy.homes');
   const [password, setPassword] = useState('c7c1305e70');
 
-  // Instant offer demo state
-  const [apartmentQuery, setApartmentQuery] = useState('');
-  const [instantOfferResult, setInstantOfferResult] = useState(null);
+  // FAQ accordion state
+  const [openFaq, setOpenFaq] = useState(0);
 
-  const demoPersonas = [
-    {
-      email: 'demo1@ivy.homes',
-      code: 'demo1',
-      role: 'Portfolio Lead',
-      theme: '#38bdf8',
-      glow: 'rgba(56, 189, 248, 0.45)',
-      desc: 'Acquisitions & Market Feeds',
-    },
-    {
-      email: 'demo2@ivy.homes',
-      code: 'demo2',
-      role: 'Asset Analyst',
-      theme: '#ec4899',
-      glow: 'rgba(236, 72, 153, 0.45)',
-      desc: 'Valuation & Pricing Yields',
-    },
-    {
-      email: 'demo3@ivy.homes',
-      code: 'demo3',
-      role: 'Data Auditor',
-      theme: '#10b981',
-      glow: 'rgba(16, 185, 129, 0.45)',
-      desc: 'Matrix & Fraud Forensics',
-    },
+  const demoAccounts = [
+    { email: 'demo1@ivy.homes', label: 'demo1', role: 'Portfolio Lead', desc: 'Sale & Rental Acquisitions' },
+    { email: 'demo2@ivy.homes', label: 'demo2', role: 'Asset Analyst', desc: 'Valuation & Pricing Yields' },
+    { email: 'demo3@ivy.homes', label: 'demo3', role: 'Data Auditor', desc: 'Matrix & Fraud Forensics' },
   ];
-
-  const activePersona = demoPersonas.find((p) => p.email === email) || demoPersonas[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,693 +29,708 @@ export const LoginPage = () => {
     }
   };
 
-  const setDemoAccount = (persona) => {
-    setEmail(persona.email);
+  const handleSelectDemo = (demoEmail) => {
+    setEmail(demoEmail);
     setPassword('c7c1305e70');
   };
 
-  const handleInstantOffer = (e) => {
-    e.preventDefault();
-    const query = apartmentQuery.trim() || 'Hiranandani Gardens, Powai';
-    setInstantOfferResult({
-      property: query,
-      estimatedOffer: '₹1.85 Cr – ₹2.10 Cr',
-      daysToClose: '60 Days Guaranteed',
-      brokerageSaved: '₹4,20,000 Saved (0% Brokerage)',
-      status: 'Live Micro-market Valuation Ready',
-    });
-  };
+  const faqs = [
+    {
+      q: 'How does Ivy homes work?',
+      a: 'At Ivy Homes, we simplify home selling by becoming your direct buyer. There is no need to list your property, wait for the right buyer, or manage an uncertain sales process. Once you share your apartment details, our team schedules a consultation, reviews the condition, and presents a guaranteed cash offer based on live micro-market transaction data.'
+    },
+    {
+      q: 'What types of properties do you buy?',
+      a: 'We actively purchase residential apartments, flats, and gated community residences across major metro corridors including Mumbai and Bangalore, from 1 BHK starter homes to luxury 4+ BHK penthouses.'
+    },
+    {
+      q: 'How do you determine my home’s value?',
+      a: 'Our valuation engine uses live registration data from the sub-registrar office, current active portal listings, and verified historical transaction prices in your specific building and locality.'
+    },
+    {
+      q: 'Will there be any deductions from the amount you offer?',
+      a: 'Zero brokerage, zero hidden legal fees. The price we agree on in the Sale Agreement is the exact payout amount transferred directly to your bank account.'
+    }
+  ];
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        overflowX: 'hidden',
-        background: 'radial-gradient(ellipse at 50% 0%, #0d1326 0%, #060914 70%, #03050a 100%)',
-        color: '#f8fafc',
-      }}
-    >
-      {/* 3D Animated Vibrant City Skyline in Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 0, opacity: 0.85 }}>
-        <City3DBackground activeTheme={activePersona.theme} />
-      </div>
-
-      {/* Subtle Mesh Ambient Glows */}
-      <div
+    <div style={{ minHeight: '100vh', width: '100%', background: '#FFFFFF', color: '#0F172A', overflowX: 'hidden' }}>
+      
+      {/* 1. TOP NAVBAR (matching official ivy.homes header) */}
+      <header
         style={{
-          position: 'fixed',
-          top: '10%',
-          left: '20%',
-          width: 600,
-          height: 600,
-          background: `radial-gradient(circle, ${activePersona.glow} 0%, transparent 65%)`,
-          filter: 'blur(100px)',
-          pointerEvents: 'none',
-          zIndex: 1,
-          transition: 'background 0.5s ease',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
+          background: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid #E2E8F0',
+          padding: '16px 32px',
         }}
-      />
+      >
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {/* Logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <Building2 size={20} />
+            </div>
+            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              ivy <span style={{ color: '#2563EB' }}>homes</span>
+            </span>
+          </div>
 
-      {/* Main Content Wrapper - Clean, Spacious, Uncluttered */}
-      <div style={{ position: 'relative', zIndex: 10, maxWidth: 1360, margin: '0 auto', padding: '24px 24px 80px' }}>
-        
-        {/* Top Header Bar */}
-        <header
+          {/* Nav items */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <a href="#how-it-works" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+              How it works
+            </a>
+            <a href="#cost-of-waiting" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+              Cost of Waiting
+            </a>
+            <a href="#faq" style={{ fontSize: '0.92rem', fontWeight: 600, color: '#475569' }}>
+              FAQ
+            </a>
+            <a
+              href="#login-portal"
+              style={{
+                padding: '9px 18px',
+                borderRadius: 20,
+                background: '#2563EB',
+                color: '#ffffff',
+                fontSize: '0.88rem',
+                fontWeight: 700,
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+              }}
+            >
+              Sign In to Portal
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* 2. HERO SECTION with Generated Authentic Happy Homeowners Photo */}
+      <section style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px 60px' }}>
+        <div
           style={{
+            position: 'relative',
+            borderRadius: 24,
+            overflow: 'hidden',
+            minHeight: 460,
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 28px',
-            borderRadius: 18,
-            background: 'rgba(10, 15, 30, 0.7)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            marginBottom: 48,
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.08)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: 10,
-                background: 'linear-gradient(135deg, #38bdf8 0%, #8b5cf6 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 14px rgba(56, 189, 248, 0.4)',
-              }}
-            >
-              <Sparkles size={20} color="#ffffff" />
-            </div>
-            <div>
-              <span style={{ fontSize: '1.25rem', fontWeight: 900, letterSpacing: '-0.02em', color: '#ffffff' }}>
-                Ivy Homes
-              </span>
-              <span style={{ fontSize: '0.68rem', color: '#38bdf8', fontWeight: 700, letterSpacing: '0.08em', display: 'block' }}>
-                MUMBAI INTELLIGENCE & ACQUISITIONS
-              </span>
-            </div>
-          </div>
+          {/* Real Photo Banner */}
+          <img
+            src="/ivy-hero.jpg"
+            alt="Happy Homeowners with Ivy Homes"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center 30%',
+            }}
+          />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.78rem', color: '#94a3b8', fontFamily: 'monospace' }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
-              <span>API: SOLVE.IVY.HOMES • LIVE</span>
-            </div>
-          </div>
-        </header>
+          {/* Gradient Overlay for Crisp Text Readability */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              background: 'linear-gradient(90deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(15, 23, 42, 0.2) 100%)',
+            }}
+          />
 
-        {/* HERO SECTION: Authentic Ivy Homes Value Proposition + Command Deck Login */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(12, 1fr)',
-            gap: 40,
-            alignItems: 'center',
-            marginBottom: 80,
-          }}
-        >
-          {/* Left Column: Authentic Brand Message (7 Cols) */}
-          <div style={{ gridColumn: 'span 7' }}>
-            
-            {/* Pill Badge */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '6px 16px',
-                borderRadius: 24,
-                background: 'rgba(56, 189, 248, 0.12)',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                color: '#38bdf8',
-                fontSize: '0.76rem',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                marginBottom: 20,
-              }}
-            >
-              <CheckCircle2 size={14} color="#38bdf8" />
-              <span>1,500+ Homeowners have trusted Ivy Homes</span>
-            </div>
-
-            {/* Headline matching actual site */}
+          {/* Hero Content */}
+          <div style={{ position: 'relative', zIndex: 10, maxWidth: 640, padding: '48px 48px' }}>
             <h1
               style={{
                 fontSize: '3.4rem',
                 fontWeight: 900,
                 lineHeight: 1.12,
+                color: '#ffffff',
                 letterSpacing: '-0.04em',
-                marginBottom: 18,
+                marginBottom: 16,
               }}
             >
               Sell your home instantly with{' '}
-              <span
-                style={{
-                  fontStyle: 'italic',
-                  background: 'linear-gradient(135deg, #38bdf8 0%, #ec4899 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
+              <span style={{ color: '#FDE047', fontStyle: 'italic' }}>
                 expert support
               </span>
             </h1>
 
-            <p
-              style={{
-                fontSize: '1.15rem',
-                color: '#94a3b8',
-                lineHeight: 1.6,
-                maxWidth: 620,
-                marginBottom: 28,
-              }}
-            >
-              Ivy Homes buys your home directly and handles everything end-to-end. No waiting, no unpredictable broker haggling, and guaranteed micro-market valuations.
+            <p style={{ fontSize: '1.18rem', color: '#E2E8F0', lineHeight: 1.6, marginBottom: 28 }}>
+              Ivy homes buys your home directly and handles everything end to end. No broker fees, no open houses, guaranteed payout.
             </p>
 
-            {/* Instant Offer Search Bar (from real Ivy Homes hero) */}
-            <form
-              onSubmit={handleInstantOffer}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: 'rgba(15, 23, 42, 0.75)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: 16,
-                padding: '8px 10px 8px 18px',
-                maxWidth: 600,
-                marginBottom: 20,
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-              }}
-            >
-              <Search size={20} color="#94a3b8" style={{ marginRight: 12, flexShrink: 0 }} />
-              <input
-                type="text"
-                placeholder="Apartment name & flat number (e.g. Hiranandani, Powai)..."
-                value={apartmentQuery}
-                onChange={(e) => setApartmentQuery(e.target.value)}
+            {/* Instant Action CTA */}
+            <div style={{ display: 'flex', gap: 14 }}>
+              <a
+                href="#login-portal"
                 style={{
-                  flex: 1,
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#ffffff',
-                  fontSize: '0.98rem',
-                  outline: 'none',
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  padding: '12px 24px',
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #2563eb, #3b82f6)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  fontSize: '0.92rem',
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
                   gap: 8,
-                  cursor: 'pointer',
-                  border: 'none',
-                  transition: 'all 0.2s',
-                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)',
+                  padding: '14px 28px',
+                  borderRadius: 14,
+                  background: '#2563EB',
+                  color: '#ffffff',
+                  fontSize: '1.02rem',
+                  fontWeight: 700,
+                  boxShadow: '0 6px 20px rgba(37, 99, 235, 0.4)',
                 }}
               >
-                <span>Get instant offer</span>
-                <ArrowRight size={16} />
+                <span>Access Mumbai Portal</span>
+                <ArrowRight size={18} />
+              </a>
+
+              <a
+                href="#how-it-works"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '14px 24px',
+                  borderRadius: 14,
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  color: '#ffffff',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                }}
+              >
+                <span>Learn How It Works</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Stats Strip (matching official site) */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 32,
+            padding: '36px 20px 24px',
+            borderBottom: '1px solid #E2E8F0',
+            textAlign: 'center',
+          }}
+        >
+          <div>
+            <strong style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0F172A', display: 'block', lineHeight: 1 }}>
+              60 <span style={{ fontSize: '1.2rem', fontWeight: 600, color: '#64748B' }}>days</span>
+            </strong>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Median Sell Time
+            </span>
+          </div>
+
+          <div style={{ borderLeft: '1px solid #E2E8F0', borderRight: '1px solid #E2E8F0' }}>
+            <strong style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0F172A', display: 'block', lineHeight: 1 }}>
+              850+ <span style={{ fontSize: '1.2rem', fontWeight: 600, color: '#64748B' }}>homes</span>
+            </strong>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Sold in Bangalore & Mumbai
+            </span>
+          </div>
+
+          <div>
+            <strong style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0F172A', display: 'block', lineHeight: 1 }}>
+              ₹1000 <span style={{ fontSize: '1.2rem', fontWeight: 600, color: '#64748B' }}>Cr+</span>
+            </strong>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              In Transactions
+            </span>
+          </div>
+        </div>
+
+        {/* Featured in News Logos */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, padding: '24px 0', opacity: 0.8 }}>
+          <span style={{ fontSize: '0.76rem', color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            In The News:
+          </span>
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: '#334155' }}>Inc42</span>
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: '#334155' }}>The Economic Times</span>
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: '#334155' }}>YourStory</span>
+        </div>
+      </section>
+
+      {/* 3. SECTION: "Every month unsold is a cost you are absorbing" (Official Periwinkle Box) */}
+      <section id="cost-of-waiting" style={{ background: '#F8FAFC', padding: '72px 24px', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#2563EB', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              The Real Numbers
+            </span>
+            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', marginTop: 6, marginBottom: 12 }}>
+              Every month unsold is <span style={{ color: '#2563EB' }}>a cost you are absorbing.</span>
+            </h2>
+            <p style={{ fontSize: '1.05rem', color: '#64748B', maxWidth: 680, margin: '0 auto' }}>
+              Most sellers think about price. Few count what waiting actually costs. Here is what one year on the open market looks like for a typical 2 BHK in Bengaluru and Mumbai.
+            </p>
+          </div>
+
+          {/* Official Light Periwinkle Card */}
+          <div
+            style={{
+              borderRadius: 24,
+              background: '#EEF2FF',
+              border: '1px solid #C7D2FE',
+              padding: '36px 40px',
+              boxShadow: '0 10px 30px rgba(99, 102, 241, 0.08)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <span style={{ background: '#2563EB', color: '#ffffff', fontSize: '0.7rem', fontWeight: 800, padding: '3px 8px', borderRadius: 4 }}>
+                ILLUSTRATION
+              </span>
+              <span style={{ fontSize: '0.88rem', color: '#4338CA', fontWeight: 600 }}>
+                2 BHK • 1,461 sqft • ₹1.08 Cr market value
+              </span>
+            </div>
+
+            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1E1B4B', margin: '6px 0 16px' }}>
+              The hidden cost of waiting 1 year
+            </h3>
+
+            {/* Line items on white cards */}
+            <div style={{ background: '#FFFFFF', borderRadius: 16, padding: '12px 24px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid #F1F5F9' }}>
+                <div>
+                  <strong style={{ fontSize: '0.98rem', color: '#0F172A', display: 'block' }}>Maintenance charges</strong>
+                  <span style={{ fontSize: '0.82rem', color: '#64748B' }}>₹9/sqft × 1,461 sqft × 12 months</span>
+                </div>
+                <strong style={{ fontSize: '1.05rem', color: '#0F172A', fontFamily: 'monospace' }}>₹1,57,788</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid #F1F5F9' }}>
+                <div>
+                  <strong style={{ fontSize: '0.98rem', color: '#0F172A', display: 'block' }}>Lost rental income</strong>
+                  <span style={{ fontSize: '0.82rem', color: '#64748B' }}>₹40,000/month × 12 months</span>
+                </div>
+                <strong style={{ fontSize: '1.05rem', color: '#0F172A', fontFamily: 'monospace' }}>₹4,80,000</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid #F1F5F9' }}>
+                <div>
+                  <strong style={{ fontSize: '0.98rem', color: '#0F172A', display: 'block' }}>Broker fee on eventual sale</strong>
+                  <span style={{ fontSize: '0.82rem', color: '#64748B' }}>2% of ₹1.08 Cr</span>
+                </div>
+                <strong style={{ fontSize: '1.05rem', color: '#0F172A', fontFamily: 'monospace' }}>₹2,16,000</strong>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0' }}>
+                <div>
+                  <strong style={{ fontSize: '0.98rem', color: '#0F172A', display: 'block' }}>Price risk & market softens</strong>
+                  <span style={{ fontSize: '0.82rem', color: '#64748B' }}>Market can soften, buyers negotiate down</span>
+                </div>
+                <strong style={{ fontSize: '0.95rem', color: '#D97706' }}>Uncertain</strong>
+              </div>
+            </div>
+
+            {/* Total Row */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 8px 18px' }}>
+              <div>
+                <strong style={{ fontSize: '1.2rem', color: '#1E1B4B' }}>Total estimated cost of waiting 1 year</strong>
+                <span style={{ display: 'block', fontSize: '0.82rem', color: '#6366F1' }}>Maintenance + lost rent + brokerage, before price risk</span>
+              </div>
+              <strong style={{ fontSize: '2.4rem', color: '#2563EB', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
+                ₹7.8 L+
+              </strong>
+            </div>
+
+            {/* Bottom 3 Pills */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, paddingTop: 18, borderTop: '1px solid #C7D2FE', textAlign: 'center' }}>
+              <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: 12 }}>
+                <strong style={{ fontSize: '1.4rem', color: '#059669', display: 'block' }}>₹0</strong>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>In Brokerage</span>
+              </div>
+              <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: 12 }}>
+                <strong style={{ fontSize: '1.4rem', color: '#059669', display: 'block' }}>₹0</strong>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Renovation Costs</span>
+              </div>
+              <div style={{ background: '#FFFFFF', padding: '14px', borderRadius: 12 }}>
+                <strong style={{ fontSize: '1.4rem', color: '#2563EB', display: 'block' }}>60 Days</strong>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>Days to Close</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. SECTION: "From first call to final cheque" (The 3 Steps from original site) */}
+      <section id="how-it-works" style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#2563EB', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            How It Works
+          </span>
+          <h2 style={{ fontSize: '2.6rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', marginTop: 6, marginBottom: 12 }}>
+            From first call to <span style={{ color: '#2563EB' }}>final cheque.</span>
+          </h2>
+          <p style={{ fontSize: '1.05rem', color: '#64748B' }}>From your first offer to getting paid.</p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 28 }}>
+          {/* Step 1 */}
+          <div
+            style={{
+              borderRadius: 20,
+              border: '1px solid #E2E8F0',
+              padding: '32px 28px',
+              background: '#FFFFFF',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F8FAFC', borderRadius: 16, marginBottom: 24 }}>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563EB' }}>
+                  <TrendingUp size={32} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#2563EB', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem' }}>
+                  1
+                </span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2563EB', background: '#EFF6FF', padding: '3px 8px', borderRadius: 6 }}>
+                  In seconds
+                </span>
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>
+                Get an instant offer
+              </h3>
+              <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.5 }}>
+                Share your apartment name and flat number to see a preliminary offer backed by live market transaction data. No commitment needed.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div
+            style={{
+              borderRadius: 20,
+              border: '2px solid #2563EB',
+              padding: '32px 28px',
+              background: '#FFFFFF',
+              boxShadow: '0 8px 24px rgba(37, 99, 235, 0.08)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#F0FDF4', borderRadius: 16, marginBottom: 24 }}>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#059669' }}>
+                  <Building2 size={32} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#2563EB', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem' }}>
+                  2
+                </span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#059669', background: '#DCFCE7', padding: '3px 8px', borderRadius: 6 }}>
+                  Day 2
+                </span>
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>
+                Free home inspection
+              </h3>
+              <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.5 }}>
+                Our evaluation team visits at your convenience, reviews the condition, and confirms all details with our micro-market valuation model.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 3 */}
+          <div
+            style={{
+              borderRadius: 20,
+              border: '1px solid #E2E8F0',
+              padding: '32px 28px',
+              background: '#FFFFFF',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ height: 160, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#FAF5FF', borderRadius: 16, marginBottom: 24 }}>
+                <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7C3AED' }}>
+                  <FileCheck size={32} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <span style={{ width: 28, height: 28, borderRadius: '50%', background: '#2563EB', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.85rem' }}>
+                  3
+                </span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7C3AED', background: '#F3E8FF', padding: '3px 8px', borderRadius: 6 }}>
+                  Within 14 days
+                </span>
+              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: 8 }}>
+                Close and get paid
+              </h3>
+              <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.5 }}>
+                Registration, documentation, and payment are all managed by Ivy. You show up, sign, and walk away with your confirmed payout.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. PORTAL SIGN IN ACCESS CONSOLE (The Main Action) */}
+      <section id="login-portal" style={{ background: '#F1F5F9', padding: '80px 24px', borderTop: '1px solid #E2E8F0' }}>
+        <div style={{ maxWidth: 840, margin: '0 auto' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: 36 }}>
+            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#2563EB', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+              Authorized Portal Access
+            </span>
+            <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', marginTop: 4, marginBottom: 8 }}>
+              Sign In to Mumbai Intelligence Portal
+            </h2>
+            <p style={{ fontSize: '0.98rem', color: '#64748B' }}>
+              Access the verified property database, rental listings, project index, and detective audit tools.
+            </p>
+          </div>
+
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: 24,
+              border: '1px solid #CBD5E1',
+              padding: '40px',
+              boxShadow: '0 12px 36px rgba(0, 0, 0, 0.06)',
+            }}
+          >
+            {/* Demo Account Pills with Role descriptions */}
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Select Demo Account to Auto-Fill:
+                </span>
+                <span style={{ fontSize: '0.74rem', color: '#059669', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  <Check size={14} /> One-Click Fill
+                </span>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                {demoAccounts.map((acc) => {
+                  const isSelected = email === acc.email;
+                  return (
+                    <button
+                      key={acc.email}
+                      type="button"
+                      onClick={() => handleSelectDemo(acc.email)}
+                      style={{
+                        padding: '14px 12px',
+                        borderRadius: 14,
+                        textAlign: 'left',
+                        background: isSelected ? '#EFF6FF' : '#F8FAFC',
+                        border: isSelected ? '2px solid #2563EB' : '1px solid #E2E8F0',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <div style={{ fontSize: '0.92rem', fontWeight: 800, color: isSelected ? '#2563EB' : '#0F172A' }}>
+                        {acc.label}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: isSelected ? '#1D4ED8' : '#64748B', marginTop: 2 }}>
+                        {acc.role}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit}>
+              {error && (
+                <div
+                  style={{
+                    background: '#FEF2F2',
+                    border: '1px solid #FCA5A5',
+                    color: '#B91C1C',
+                    padding: '12px 16px',
+                    borderRadius: 10,
+                    fontSize: '0.88rem',
+                    marginBottom: 18,
+                  }}
+                >
+                  {error}
+                </div>
+              )}
+
+              <div style={{ marginBottom: 18 }}>
+                <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Email Address
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={18} style={{ position: 'absolute', left: 16, top: 14, color: '#94A3B8' }} />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px 12px 46px',
+                      borderRadius: 12,
+                      background: '#F8FAFC',
+                      border: '1px solid #CBD5E1',
+                      color: '#0F172A',
+                      fontSize: '0.96rem',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: 'block', fontSize: '0.76rem', fontWeight: 700, color: '#334155', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Password
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <KeyRound size={18} style={{ position: 'absolute', left: 16, top: 14, color: '#94A3B8' }} />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px 12px 46px',
+                      borderRadius: 12,
+                      background: '#F8FAFC',
+                      border: '1px solid #CBD5E1',
+                      color: '#0F172A',
+                      fontSize: '0.96rem',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '14px 24px',
+                  borderRadius: 12,
+                  background: '#2563EB',
+                  border: 'none',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '1.05rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+                  transition: 'background 0.2s',
+                }}
+              >
+                <span>{loading ? 'Authenticating...' : 'Enter Mumbai Property Portal'}</span>
+                <ArrowRight size={18} />
               </button>
             </form>
 
-            {/* Instant Offer Preview Popup if tested */}
-            {instantOfferResult && (
+            <div style={{ marginTop: 20, textAlign: 'center', fontSize: '0.78rem', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              <ShieldCheck size={16} color="#059669" />
+              <span>Connected to live backend solve.ivy.homes • API Key: IVY26-AC068556E03E</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. FAQ SECTION (from real Ivy Homes site) */}
+      <section id="faq" style={{ maxWidth: 960, margin: '0 auto', padding: '80px 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 44 }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#2563EB', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            FAQ
+          </span>
+          <h2 style={{ fontSize: '2.4rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', marginTop: 4, marginBottom: 8 }}>
+            Questions we hear most often.
+          </h2>
+          <p style={{ fontSize: '1rem', color: '#64748B' }}>
+            Selling a home raises a lot of questions. Here are honest answers to the ones we hear most.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {faqs.map((faq, idx) => {
+            const isOpen = openFaq === idx;
+            return (
               <div
-                className="glass-panel animate-fade-in"
+                key={idx}
                 style={{
-                  maxWidth: 600,
-                  padding: 16,
                   borderRadius: 14,
-                  background: 'rgba(16, 185, 129, 0.12)',
-                  border: '1px solid rgba(16, 185, 129, 0.35)',
-                  marginBottom: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 16,
+                  border: '1px solid #E2E8F0',
+                  background: '#FFFFFF',
+                  overflow: 'hidden',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.02)',
                 }}
               >
-                <div>
-                  <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 800, textTransform: 'uppercase' }}>
-                    {instantOfferResult.status}
-                  </div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>
-                    {instantOfferResult.estimatedOffer}
-                  </div>
-                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                    {instantOfferResult.brokerageSaved} • {instantOfferResult.daysToClose}
-                  </div>
-                </div>
                 <button
                   type="button"
-                  onClick={() => setInstantOfferResult(null)}
-                  style={{ fontSize: '0.75rem', color: '#94a3b8', padding: '4px 8px' }}
-                >
-                  Dismiss
-                </button>
-              </div>
-            )}
-
-            {/* Trust Metrics Bar (matching real Ivy Homes homepage) */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 24,
-                maxWidth: 600,
-                padding: '18px 0',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                marginBottom: 24,
-              }}
-            >
-              <div>
-                <strong style={{ fontSize: '1.8rem', fontWeight: 900, color: '#38bdf8', fontFamily: 'var(--font-heading)', display: 'block', lineHeight: 1 }}>
-                  60 days
-                </strong>
-                <span style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Median Sell Time
-                </span>
-              </div>
-
-              <div>
-                <strong style={{ fontSize: '1.8rem', fontWeight: 900, color: '#10b981', fontFamily: 'var(--font-heading)', display: 'block', lineHeight: 1 }}>
-                  850+ homes
-                </strong>
-                <span style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Sold in Metros
-                </span>
-              </div>
-
-              <div>
-                <strong style={{ fontSize: '1.8rem', fontWeight: 900, color: '#ec4899', fontFamily: 'var(--font-heading)', display: 'block', lineHeight: 1 }}>
-                  ₹1000 Cr+
-                </strong>
-                <span style={{ fontSize: '0.76rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  In Transactions
-                </span>
-              </div>
-            </div>
-
-            {/* In The News Strip */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                Featured In:
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 24, opacity: 0.75, fontSize: '0.85rem', fontWeight: 700, color: '#cbd5e1' }}>
-                <span>Inc42</span>
-                <span>The Economic Times</span>
-                <span>YourStory</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Column: Sleek Executive Intelligence Access Deck (5 Cols) */}
-          <div style={{ gridColumn: 'span 5' }}>
-            <div
-              className="glass-panel animate-fade-in"
-              style={{
-                padding: '36px 32px',
-                borderRadius: 24,
-                background: 'rgba(8, 14, 28, 0.75)',
-                backdropFilter: 'blur(30px)',
-                WebkitBackdropFilter: 'blur(30px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                boxShadow: `0 24px 60px -10px rgba(0, 0, 0, 0.8), 0 0 40px ${activePersona.glow}`,
-                transition: 'box-shadow 0.4s ease',
-              }}
-            >
-              <div style={{ marginBottom: 20 }}>
-                <span
-                  style={{
-                    fontSize: '0.72rem',
-                    fontWeight: 800,
-                    color: activePersona.theme,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    display: 'block',
-                    marginBottom: 4,
-                  }}
-                >
-                  Verified Credentials Deck
-                </span>
-                <h2 style={{ fontSize: '1.6rem', fontWeight: 900, letterSpacing: '-0.02em', margin: 0 }}>
-                  Portal Sign In
-                </h2>
-              </div>
-
-              {/* Demo Persona Quick Select */}
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>
-                    Choose Demo Role
-                  </span>
-                  <span style={{ fontSize: '0.68rem', color: activePersona.theme, fontWeight: 700 }}>
-                    Instant Fill
-                  </span>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
-                  {demoPersonas.map((persona) => {
-                    const isSelected = email === persona.email;
-                    return (
-                      <button
-                        key={persona.code}
-                        type="button"
-                        onClick={() => setDemoAccount(persona)}
-                        style={{
-                          padding: '8px 6px',
-                          borderRadius: 10,
-                          textAlign: 'center',
-                          background: isSelected
-                            ? `linear-gradient(145deg, rgba(20, 30, 60, 0.9), rgba(10, 16, 36, 0.95))`
-                            : 'rgba(15, 23, 42, 0.6)',
-                          border: isSelected ? `2px solid ${persona.theme}` : '1px solid rgba(255, 255, 255, 0.08)',
-                          boxShadow: isSelected ? `0 4px 16px ${persona.glow}` : 'none',
-                          color: isSelected ? '#ffffff' : '#94a3b8',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                        }}
-                      >
-                        <div style={{ fontSize: '0.78rem', fontWeight: 800, color: isSelected ? persona.theme : '#e2e8f0' }}>
-                          {persona.code}
-                        </div>
-                        <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: 2 }}>
-                          {persona.role}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Form */}
-              <form onSubmit={handleSubmit}>
-                {error && (
-                  <div
-                    style={{
-                      background: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      color: '#fca5a5',
-                      padding: '10px 14px',
-                      borderRadius: 10,
-                      fontSize: '0.82rem',
-                      marginBottom: 14,
-                    }}
-                  >
-                    {error}
-                  </div>
-                )}
-
-                <div style={{ marginBottom: 14 }}>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 6 }}>
-                    Portal Email
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <Mail size={16} style={{ position: 'absolute', left: 14, top: 12, color: '#94a3b8' }} />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px 10px 40px',
-                        borderRadius: 10,
-                        background: 'rgba(10, 15, 30, 0.8)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        color: '#ffffff',
-                        fontSize: '0.92rem',
-                        outline: 'none',
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 6 }}>
-                    Password
-                  </label>
-                  <div style={{ position: 'relative' }}>
-                    <KeyRound size={16} style={{ position: 'absolute', left: 14, top: 12, color: '#94a3b8' }} />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px 10px 40px',
-                        borderRadius: 10,
-                        background: 'rgba(10, 15, 30, 0.8)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        color: '#ffffff',
-                        fontSize: '0.92rem',
-                        outline: 'none',
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
+                  onClick={() => setOpenFaq(isOpen ? -1 : idx)}
                   style={{
                     width: '100%',
-                    padding: '13px 20px',
-                    borderRadius: 12,
-                    background: `linear-gradient(135deg, ${activePersona.theme} 0%, #8b5cf6 60%, #ec4899 100%)`,
-                    border: 'none',
-                    color: '#ffffff',
-                    fontWeight: 800,
-                    fontSize: '0.98rem',
+                    padding: '20px 24px',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
+                    justifyContent: 'space-between',
+                    background: 'none',
+                    border: 'none',
+                    textAlign: 'left',
                     cursor: 'pointer',
-                    boxShadow: `0 8px 24px ${activePersona.glow}`,
-                    transition: 'all 0.2s ease',
                   }}
                 >
-                  <span>{loading ? 'Authenticating...' : 'Enter Mumbai Command Portal'}</span>
-                  <ArrowRight size={18} />
+                  <span style={{ fontSize: '1.05rem', fontWeight: 700, color: isOpen ? '#2563EB' : '#0F172A' }}>
+                    {faq.q}
+                  </span>
+                  {isOpen ? <ChevronUp size={20} color="#2563EB" /> : <ChevronDown size={20} color="#64748B" />}
                 </button>
-              </form>
 
-              <div style={{ marginTop: 18, textAlign: 'center', fontSize: '0.72rem', color: '#64748b' }}>
-                Secured live session • OAuth2 Bearer token with auto-refresh
+                {isOpen && (
+                  <div style={{ padding: '0 24px 20px', color: '#475569', fontSize: '0.94rem', lineHeight: 1.6 }}>
+                    {faq.a}
+                  </div>
+                )}
               </div>
-            </div>
-          </div>
-        </section>
+            );
+          })}
+        </div>
+      </section>
 
-        {/* SECTION 2: THE REAL NUMBERS — "Every month unsold is a cost you are absorbing" */}
-        <section style={{ marginBottom: 80 }}>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              The Real Numbers
-            </span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.03em', marginTop: 6, marginBottom: 10 }}>
-              Every month unsold is <span style={{ color: '#ec4899' }}>a cost you are absorbing.</span>
-            </h2>
-            <p style={{ color: '#94a3b8', fontSize: '1rem', maxWidth: 640, margin: '0 auto' }}>
-              Most sellers think about price. Few count what waiting actually costs. Here is what one year on the open market looks like for a typical 2 BHK in Mumbai.
-            </p>
-          </div>
+      {/* 7. MINIMALIST FOOTER */}
+      <footer style={{ background: '#0F172A', color: '#94A3B8', padding: '40px 24px', textAlign: 'center', fontSize: '0.84rem' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          <p style={{ color: '#E2E8F0', fontWeight: 700, fontSize: '1rem', marginBottom: 8 }}>
+            Ivy Homes • Mumbai Real Estate Intelligence Portal
+          </p>
+          <p style={{ margin: 0 }}>
+            Official candidate assignment submission by Arsh Sharma (arsh@mnnit.ac.in) • All rights reserved © 2026 Ivy Homes
+          </p>
+        </div>
+      </footer>
 
-          {/* Detailed Financial Comparison Card (from the owner's homepage) */}
-          <div
-            className="glass-panel"
-            style={{
-              maxWidth: 900,
-              margin: '0 auto',
-              borderRadius: 24,
-              overflow: 'hidden',
-              background: 'rgba(12, 18, 36, 0.75)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
-            }}
-          >
-            <div style={{ padding: '28px 36px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                <span style={{ background: '#2563eb', color: '#ffffff', fontSize: '0.68rem', fontWeight: 800, padding: '3px 8px', borderRadius: 4 }}>
-                  ILLUSTRATION
-                </span>
-                <span style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>2 BHK • 1,461 sqft • ₹1.08 Cr market value</span>
-              </div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: '4px 0' }}>
-                The hidden cost of waiting 1 year
-              </h3>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0 }}>
-                These are the actual carrying costs a seller absorbs while waiting for the right buyer to show up.
-              </p>
-            </div>
-
-            {/* Carrying Cost Line Items */}
-            <div style={{ padding: '24px 36px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                <div>
-                  <strong style={{ fontSize: '0.95rem', color: '#e2e8f0', display: 'block' }}>Maintenance charges</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>₹9/sqft × 1,461 sqft × 12 months</span>
-                </div>
-                <strong style={{ fontSize: '1.05rem', color: '#ffffff', fontFamily: 'monospace' }}>₹1,57,788</strong>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                <div>
-                  <strong style={{ fontSize: '0.95rem', color: '#e2e8f0', display: 'block' }}>Lost rental income</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>₹40,000/month × 12 months</span>
-                </div>
-                <strong style={{ fontSize: '1.05rem', color: '#ffffff', fontFamily: 'monospace' }}>₹4,80,000</strong>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                <div>
-                  <strong style={{ fontSize: '0.95rem', color: '#e2e8f0', display: 'block' }}>Broker fee on eventual sale</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>2% of ₹1.08 Cr</span>
-                </div>
-                <strong style={{ fontSize: '1.05rem', color: '#ffffff', fontFamily: 'monospace' }}>₹2,16,000</strong>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-                <div>
-                  <strong style={{ fontSize: '0.95rem', color: '#e2e8f0', display: 'block' }}>Price risk & market softens</strong>
-                  <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Market can soften, buyers negotiate down</span>
-                </div>
-                <strong style={{ fontSize: '0.95rem', color: '#f59e0b' }}>Uncertain</strong>
-              </div>
-
-              {/* Total Row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 0 10px' }}>
-                <div>
-                  <strong style={{ fontSize: '1.1rem', color: '#ffffff' }}>Total estimated cost of waiting 1 year</strong>
-                  <span style={{ display: 'block', fontSize: '0.75rem', color: '#94a3b8' }}>Maintenance + lost rent + brokerage, before price risk</span>
-                </div>
-                <strong style={{ fontSize: '2rem', color: '#ec4899', fontWeight: 900, fontFamily: 'var(--font-heading)' }}>
-                  ₹7.8 L+
-                </strong>
-              </div>
-            </div>
-
-            {/* Bottom 3 Highlights */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                padding: '20px 36px',
-                background: 'rgba(8, 12, 24, 0.8)',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                textAlign: 'center',
-              }}
-            >
-              <div>
-                <strong style={{ fontSize: '1.4rem', color: '#10b981', display: 'block', fontFamily: 'var(--font-heading)' }}>₹0</strong>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>In Brokerage</span>
-              </div>
-              <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.08)', borderRight: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <strong style={{ fontSize: '1.4rem', color: '#10b981', display: 'block', fontFamily: 'var(--font-heading)' }}>₹0</strong>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>Renovation Costs</span>
-              </div>
-              <div>
-                <strong style={{ fontSize: '1.4rem', color: '#38bdf8', display: 'block', fontFamily: 'var(--font-heading)' }}>60 Days</strong>
-                <span style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700 }}>Days to Close</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* SECTION 3: "Faster. Fairer. Fully taken care of." (The 5 Brand Pillars) */}
-        <section>
-          <div style={{ textAlign: 'center', marginBottom: 36 }}>
-            <span style={{ fontSize: '0.76rem', fontWeight: 800, color: '#10b981', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Our Promise
-            </span>
-            <h2 style={{ fontSize: '2.5rem', fontWeight: 900, letterSpacing: '-0.03em', marginTop: 6, marginBottom: 10 }}>
-              Faster. Fairer. <span style={{ color: '#38bdf8' }}>Fully taken care of.</span>
-            </h2>
-            <p style={{ color: '#94a3b8', fontSize: '1rem', maxWidth: 640, margin: '0 auto' }}>
-              A fair offer, honoured to the rupee, with everything in between handled for you.
-            </p>
-          </div>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: 20,
-              maxWidth: 1100,
-              margin: '0 auto',
-            }}
-          >
-            <div className="glass-panel" style={{ padding: 24, borderRadius: 16, background: 'rgba(10, 16, 32, 0.65)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <ShieldCheck size={22} color="#38bdf8" />
-              </div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 6 }}>We commit. No backing out.</h4>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                Once we make an offer, we stand by it. No last-minute re-negotiations or reneging.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: 24, borderRadius: 16, background: 'rgba(10, 16, 32, 0.65)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <TrendingUp size={22} color="#10b981" />
-              </div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 6 }}>Fair and transparent pricing</h4>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                Backed by real transactions, live listings, and micro-market intelligence across Mumbai.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: 24, borderRadius: 16, background: 'rgba(10, 16, 32, 0.65)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(236, 72, 153, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <FileCheck size={22} color="#ec4899" />
-              </div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 6 }}>Just show up to sign</h4>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                Legal, paperwork & registration, all handled by our in-house property attorneys.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: 24, borderRadius: 16, background: 'rgba(10, 16, 32, 0.65)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <Percent size={22} color="#f59e0b" />
-              </div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 6 }}>Zero brokerage</h4>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                No commission, no hidden charges. The valuation you accept is the exact payout you receive.
-              </p>
-            </div>
-
-            <div className="glass-panel" style={{ padding: 24, borderRadius: 16, background: 'rgba(10, 16, 32, 0.65)' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(139, 92, 246, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-                <Calendar size={22} color="#8b5cf6" />
-              </div>
-              <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: 6 }}>Your sale, your terms</h4>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                Pick a payout structure and closing date that fits your personal moving timeline.
-              </p>
-            </div>
-          </div>
-        </section>
-
-      </div>
     </div>
   );
 };

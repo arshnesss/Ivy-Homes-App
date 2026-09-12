@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
 import { ListingCard } from '../components/ListingCard';
-import { ListingModal } from '../components/ListingModal';
-import { Key, MapPin, RefreshCw, ChevronLeft, ChevronRight, Calculator } from 'lucide-react';
+import { Key, MapPin, RefreshCw, ChevronLeft, ChevronRight, Search, X } from 'lucide-react';
 
 export const RentalsPage = ({ onSelectRental }) => {
   const [rentals, setRentals] = useState([]);
@@ -12,6 +11,8 @@ export const RentalsPage = ({ onSelectRental }) => {
   const limit = 20;
   const [hasMore, setHasMore] = useState(false);
 
+  // Filters
+  const [searchTerm, setSearchTerm] = useState('');
   const [locality, setLocality] = useState('');
   const [bhk, setBhk] = useState('');
   const [furnishing, setFurnishing] = useState('');
@@ -52,130 +53,186 @@ export const RentalsPage = ({ onSelectRental }) => {
     }
   };
 
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setLocality('');
+    setBhk('');
+    setFurnishing('');
+    setOffset(0);
+  };
+
+  const hasActiveFilters = Boolean(searchTerm || locality || bhk || furnishing);
+
+  const filteredRentals = rentals.filter(item => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    return (
+      (item.apartment_name && item.apartment_name.toLowerCase().includes(term)) ||
+      (item.locality && item.locality.toLowerCase().includes(term)) ||
+      (item.description && item.description.toLowerCase().includes(term))
+    );
+  });
+
   return (
     <div className="animate-fade-in" style={{ maxWidth: 1360, margin: '0 auto' }}>
       
       {/* Page Header */}
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 6 }}>
-          Mumbai Rental Residences
-        </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.96rem' }}>
-          Verified residential rentals across Mumbai micro-markets • Direct owner & broker listings
-        </p>
-      </div>
-
-      {/* Powai Rent Highlight Box (Question 5 Answer Callout) - Clean & Uncluttered */}
-      <div
-        className="glass-panel"
-        style={{
-          background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(59,130,246,0.08) 100%)',
-          border: '1px solid rgba(16,185,129,0.25)',
-          borderRadius: 18,
-          padding: '24px 28px',
-          marginBottom: 32,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 20,
-        }}
-      >
+      <div style={{ marginBottom: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#10b981', fontWeight: 700, fontSize: '0.76rem', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 6 }}>
-            <Calculator size={14} />
-            <span>Assigned Locality Analysis • Question 5</span>
-          </div>
-          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, marginBottom: 4 }}>
-            Powai Total Monthly Rent Aggregate
-          </h3>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-            Empirical calculation across all 215 verified rental records situated in Powai
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 6 }}>
+            Mumbai Rental Residences
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.96rem' }}>
+            Verified residential rental apartments, flats, and duplexes across Mumbai micro-markets
           </p>
         </div>
 
-        <div
-          style={{
-            background: 'var(--bg-card)',
-            padding: '14px 24px',
-            borderRadius: 14,
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            textAlign: 'right',
-            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
-          }}
+        <button 
+          onClick={fetchRentals} 
+          className="btn-secondary"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 18px', borderRadius: 12 }}
         >
-          <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#10b981', fontFamily: 'var(--font-heading)', lineHeight: 1.1 }}>
-            ₹77,24,700
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4, fontWeight: 600 }}>
-            Total Powai Monthly Rent
-          </div>
-        </div>
+          <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
+          <span>Refresh Rentals</span>
+        </button>
       </div>
 
-      {/* Spacious, Uncluttered Filters Bar */}
+      {/* Spacious, Clear Search & Filter Console */}
       <div
         className="glass-panel"
         style={{
-          padding: '18px 24px',
+          padding: '24px',
           marginBottom: 32,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: 16,
-          borderRadius: 16,
+          borderRadius: 18,
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-color)',
+          boxShadow: 'var(--shadow-lg)'
         }}
       >
-        <div>
-          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-            Locality
-          </label>
-          <select
-            value={locality}
-            onChange={e => handleFilterChange(setLocality, e.target.value)}
-            style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
-          >
-            <option value="">All Mumbai Localities</option>
-            <option value="powai">Powai (Assigned)</option>
-            <option value="bandra east">Bandra East</option>
-            <option value="andheri west">Andheri West</option>
-            <option value="chembur">Chembur</option>
-            <option value="thane west">Thane West</option>
-            <option value="mulund west">Mulund West</option>
-            <option value="borivali west">Borivali West</option>
-          </select>
+        {/* Search Bar */}
+        <div style={{ position: 'relative', marginBottom: 20 }}>
+          <Search size={20} style={{ position: 'absolute', left: 16, top: 14, color: 'var(--text-muted)' }} />
+          <input
+            type="text"
+            placeholder="Search rentals by building name, locality, or keyword (e.g. Hiranandani, Powai)..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            style={{
+              width: '100%',
+              padding: '12px 42px 12px 46px',
+              borderRadius: 12,
+              background: 'var(--bg-elevated)',
+              border: '1px solid var(--border-color)',
+              color: 'var(--text-main)',
+              fontSize: '0.96rem',
+              outline: 'none',
+              transition: 'border-color 0.2s',
+            }}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              style={{
+                position: 'absolute',
+                right: 14,
+                top: 14,
+                color: 'var(--text-muted)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
-        <div>
-          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-            Bedrooms
-          </label>
-          <select
-            value={bhk}
-            onChange={e => handleFilterChange(setBhk, e.target.value)}
-            style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
-          >
-            <option value="">Any BHK Configuration</option>
-            <option value="1">1 BHK</option>
-            <option value="2">2 BHK</option>
-            <option value="3">3 BHK</option>
-          </select>
+        {/* Filter Controls Row */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 16,
+            alignItems: 'center',
+          }}
+        >
+          <div>
+            <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+              Locality
+            </label>
+            <select
+              value={locality}
+              onChange={e => handleFilterChange(setLocality, e.target.value)}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
+            >
+              <option value="">All Mumbai Localities</option>
+              <option value="powai">Powai (Assigned)</option>
+              <option value="bandra east">Bandra East</option>
+              <option value="andheri west">Andheri West</option>
+              <option value="chembur">Chembur</option>
+              <option value="thane west">Thane West</option>
+              <option value="mulund west">Mulund West</option>
+              <option value="borivali west">Borivali West</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+              Bedrooms (BHK)
+            </label>
+            <select
+              value={bhk}
+              onChange={e => handleFilterChange(setBhk, e.target.value)}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
+            >
+              <option value="">Any BHK Configuration</option>
+              <option value="1">1 BHK</option>
+              <option value="2">2 BHK</option>
+              <option value="3">3 BHK</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+              Furnishing
+            </label>
+            <select
+              value={furnishing}
+              onChange={e => handleFilterChange(setFurnishing, e.target.value)}
+              style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
+            >
+              <option value="">Any Furnishing Status</option>
+              <option value="unfurnished">Unfurnished</option>
+              <option value="semi-furnished">Semi-Furnished</option>
+              <option value="fully-furnished">Fully-Furnished</option>
+            </select>
+          </div>
         </div>
 
-        <div>
-          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-            Furnishing
-          </label>
-          <select
-            value={furnishing}
-            onChange={e => handleFilterChange(setFurnishing, e.target.value)}
-            style={{ width: '100%', padding: '10px 14px', borderRadius: 10, background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', color: 'var(--text-main)', fontSize: '0.9rem', outline: 'none' }}
-          >
-            <option value="">Any Furnishing Status</option>
-            <option value="unfurnished">Unfurnished</option>
-            <option value="semi-furnished">Semi-Furnished</option>
-            <option value="fully-furnished">Fully-Furnished</option>
-          </select>
-        </div>
+        {/* Clear Filters Action */}
+        {hasActiveFilters && (
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end' }}>
+            <button
+              onClick={clearAllFilters}
+              style={{
+                fontSize: '0.82rem',
+                color: 'var(--primary)',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '4px 10px',
+                borderRadius: 8,
+                background: 'var(--primary-light)',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <X size={14} />
+              <span>Reset All Filters</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Grid of Rental Listings */}
@@ -184,10 +241,20 @@ export const RentalsPage = ({ onSelectRental }) => {
           <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 16px', color: 'var(--primary)' }} />
           <p style={{ fontSize: '1.05rem', fontWeight: 600 }}>Loading verified rental listings...</p>
         </div>
+      ) : filteredRentals.length === 0 ? (
+        <div className="glass-panel" style={{ padding: '60px 20px', textAlign: 'center', borderRadius: 18 }}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: 8 }}>No Rentals Match Your Search</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: 20 }}>
+            Try selecting a different locality or resetting your search term.
+          </p>
+          <button onClick={clearAllFilters} className="btn-primary">
+            <span>Clear Filters</span>
+          </button>
+        </div>
       ) : (
         <>
           <div className="grid-listings" style={{ marginBottom: 40 }}>
-            {rentals.map(item => (
+            {filteredRentals.map(item => (
               <ListingCard
                 key={item.listing_id}
                 item={item}
@@ -198,7 +265,7 @@ export const RentalsPage = ({ onSelectRental }) => {
           </div>
 
           {/* Spacious Pagination Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 24 }}>
             <button
               onClick={() => setOffset(Math.max(0, offset - limit))}
               disabled={offset === 0}
@@ -226,4 +293,3 @@ export const RentalsPage = ({ onSelectRental }) => {
     </div>
   );
 };
-
