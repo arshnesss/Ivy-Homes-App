@@ -3,7 +3,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { FavouritesProvider } from './context/FavouritesContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
-import { LoginPage } from './pages/LoginPage';
+import { LandingPage } from './pages/LandingPage';
+import { SignInPage } from './pages/SignInPage';
 import { ListingsPage } from './pages/ListingsPage';
 import { ListingDetailPage } from './pages/ListingDetailPage';
 import { RentalsPage } from './pages/RentalsPage';
@@ -17,7 +18,8 @@ import { Sparkles } from 'lucide-react';
 const AppContent = () => {
   const { user } = useAuth();
   const [currentRoute, setCurrentRoute] = useState(() => {
-    return window.location.hash.replace('#/', '') || 'listings';
+    const raw = window.location.hash.replace('#/', '');
+    return raw || 'home';
   });
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('ivy_theme');
@@ -38,7 +40,7 @@ const AppContent = () => {
         return;
       }
       const hash = fullHash.replace('#/', '');
-      setCurrentRoute(hash || 'listings');
+      setCurrentRoute(hash || 'home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -59,8 +61,12 @@ const AppContent = () => {
     window.location.hash = `#/${route}`;
   };
 
+  // When unauthenticated, show either the authentic landing page or the 3D animated sign-in page
   if (!user) {
-    return <LoginPage />;
+    if (currentRoute === 'signin' || currentRoute === 'login') {
+      return <SignInPage onBack={() => navigateTo('home')} />;
+    }
+    return <LandingPage onGoToSignIn={() => navigateTo('signin')} />;
   }
 
   // Parse route parameters for dedicated property detail view (e.g. listings/100-5000042)
