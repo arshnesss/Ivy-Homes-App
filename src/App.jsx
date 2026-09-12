@@ -76,7 +76,11 @@ const AppContent = () => {
                 onSelectListing={(item) => navigateTo(`listings/${item.listing_id}`)}
               />
             )}
-            {mainTab === 'rentals' && <RentalsPage />}
+            {mainTab === 'rentals' && (
+              <RentalsPage
+                onSelectRental={(item) => navigateTo(`rentals/${item.listing_id}`)}
+              />
+            )}
             {mainTab === 'projects' && <ProjectsPage />}
             {mainTab === 'saved' && <SavedPage />}
             {mainTab === 'insights' && <InsightsPage />}

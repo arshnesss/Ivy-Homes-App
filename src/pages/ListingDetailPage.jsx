@@ -99,7 +99,7 @@ export const ListingDetailPage = ({ listingId, onBack, isRental = false }) => {
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <button onClick={onBack} className="btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
           <ArrowLeft size={18} />
-          <span>Back to All Listings</span>
+          <span>{isRental ? 'Back to Rentals' : 'Back to All Listings'}</span>
         </button>
 
         <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
