@@ -7,9 +7,9 @@
     "demo_url": "https://ivy-homes-app.vercel.app"
   },
   "answers": {
-    "total_listing_records": 4950,
-    "unique_properties": 4931,
-    "active_listings": 3892,
+    "total_listing_records": 5050,
+    "unique_properties": 5030,
+    "active_listings": 3975,
     "corrupt_listing_ids": [
       "100-5000050",
       "100-5000339",
@@ -20,6 +20,7 @@
       "100-5003914",
       "100-5004028",
       "DWE-5000518",
+      "DWE-5001781",
       "DWE-5001929",
       "DWE-5001932",
       "DWE-5002147",
@@ -50,16 +51,17 @@
       "SQU-5003928",
       "ZER-5001536",
       "ZER-5002788",
+      "ZER-5003369",
       "ZER-5003818",
       "ZER-5004007"
     ],
-    "total_monthly_rent": 7724700,
-    "avg_price_per_sqft_2bhk": 62691.14,
+    "total_monthly_rent": 8000100,
+    "avg_price_per_sqft_2bhk": 62787.05,
     "costliest_project": {
       "project_id": "P50016",
       "price_max_inr": 124400000
     },
-    "listings_last_7_days": 146,
+    "listings_last_7_days": 148,
     "fake_listing_ids": [
       "DWE-5000622",
       "DWE-5000893",
@@ -73,7 +75,7 @@
       "ZER-5001089",
       "ZER-5001249"
     ],
-    "projects_with_wrong_listing_count": 443
+    "projects_with_wrong_listing_count": 441
   },
   "findings": [
     {
