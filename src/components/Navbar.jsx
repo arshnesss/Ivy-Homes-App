@@ -1,0 +1,110 @@
+import React from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useFavourites } from '../context/FavouritesContext';
+import { Home, Building2, Key, Bookmark, BarChart3, LogOut, Sun, Moon, Sparkles } from 'lucide-react';
+
+export const Navbar = ({ activeTab, setActiveTab, theme, toggleTheme }) => {
+  const { user, logout } = useAuth();
+  const { favourites } = useFavourites();
+
+  const navItems = [
+    { id: 'listings', label: 'Sale Listings', icon: Home },
+    { id: 'rentals', label: 'Rentals', icon: Key },
+    { id: 'projects', label: 'Projects', icon: Building2 },
+    { id: 'saved', label: 'Saved', icon: Bookmark, badge: favourites.length },
+    { id: 'insights', label: 'Insights & Detective Audit', icon: BarChart3 },
+  ];
+
+  return (
+    <header className="glass-panel" style={{ borderRadius: 0, borderTop: 0, borderLeft: 0, borderRight: 0, sticky: 'top', zIndex: 100 }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        
+        {/* Brand Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }} onClick={() => setActiveTab('listings')}>
+          <div style={{ background: 'linear-gradient(135deg, #3B82F6, #10B981)', padding: 8, borderRadius: 12, color: '#fff', display: 'flex' }}>
+            <Sparkles size={22} />
+          </div>
+          <div>
+            <h1 style={{ fontSize: '1.25rem', lineHeight: 1.1, background: 'linear-gradient(135deg, #60A5FA, #34D399)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              Ivy Homes
+            </h1>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.05em' }}>
+              MUMBAI PORTAL
+            </span>
+          </div>
+        </div>
+
+        {/* Nav Links */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+          {navItems.map(item => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  padding: '8px 14px',
+                  borderRadius: 10,
+                  fontSize: '0.88rem',
+                  fontWeight: isActive ? 600 : 500,
+                  background: isActive ? 'var(--primary-light)' : 'transparent',
+                  color: isActive ? 'var(--primary)' : 'var(--text-main)',
+                  border: isActive ? '1px solid rgba(59, 130, 246, 0.3)' : '1px solid transparent',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Icon size={16} />
+                <span>{item.label}</span>
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span style={{ background: 'var(--primary)', color: '#fff', fontSize: '0.7rem', padding: '2px 7px', borderRadius: 10, fontWeight: 700 }}>
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* User Session & Theme Controls */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button
+            onClick={toggleTheme}
+            style={{
+              padding: 8,
+              borderRadius: 10,
+              background: 'var(--bg-elevated)',
+              color: 'var(--text-main)',
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+            title="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {user && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'var(--bg-elevated)', padding: '6px 12px', borderRadius: 12, border: '1px solid var(--border-color)' }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                {user.email}
+              </span>
+              <button
+                onClick={logout}
+                style={{ padding: 4, color: 'var(--danger)', marginLeft: 4, display: 'flex', alignItems: 'center' }}
+                title="Log Out"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          )}
+        </div>
+
+      </div>
+    </header>
+  );
+};
