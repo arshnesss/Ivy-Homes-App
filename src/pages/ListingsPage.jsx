@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
 import { ListingCard } from '../components/ListingCard';
-import { ListingModal } from '../components/ListingModal';
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight, RefreshCw, AlertCircle } from 'lucide-react';
 
-export const ListingsPage = () => {
+export const ListingsPage = ({ onSelectListing }) => {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedListing, setSelectedListing] = useState(null);
 
   // Pagination state
   const [offset, setOffset] = useState(0);
@@ -58,13 +56,11 @@ export const ListingsPage = () => {
     fetchListings();
   }, [fetchListings]);
 
-  // Reset to first page when filters change
   const handleFilterChange = (setter, value) => {
     setOffset(0);
     setter(value);
   };
 
-  // Client-side search filtering
   const filteredListings = listings.filter(item => {
     if (hideQualityIssues && (item.is_corrupt || item.is_fake)) {
       return false;
@@ -123,7 +119,6 @@ export const ListingsPage = () => {
         {/* Filter Controls Row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, alignItems: 'center' }}>
           
-          {/* Locality */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>LOCALITY</label>
             <select
@@ -144,7 +139,6 @@ export const ListingsPage = () => {
             </select>
           </div>
 
-          {/* Bedrooms BHK */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>BEDROOMS</label>
             <select
@@ -161,7 +155,6 @@ export const ListingsPage = () => {
             </select>
           </div>
 
-          {/* Property Type */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>TYPE</label>
             <select
@@ -178,7 +171,6 @@ export const ListingsPage = () => {
             </select>
           </div>
 
-          {/* Furnishing */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>FURNISHING</label>
             <select
@@ -193,7 +185,6 @@ export const ListingsPage = () => {
             </select>
           </div>
 
-          {/* Sort By */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>SORT BY</label>
             <select
@@ -208,7 +199,6 @@ export const ListingsPage = () => {
             </select>
           </div>
 
-          {/* Sort Order */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: 4 }}>ORDER</label>
             <button
@@ -253,11 +243,11 @@ export const ListingsPage = () => {
 
       </div>
 
-      {/* Main Content State */}
+      {/* Main Content */}
       {loading ? (
         <div style={{ padding: 60, textAlign: 'center', color: 'var(--text-muted)' }}>
           <RefreshCw size={32} className="animate-spin" style={{ margin: '0 auto 12px' }} />
-          <p>Loading property listings from backend...</p>
+          <p>Loading property listings from solve.ivy.homes...</p>
         </div>
       ) : error ? (
         <div style={{ background: 'var(--danger-light)', color: 'var(--danger)', padding: 24, borderRadius: 14, textAlign: 'center' }}>
@@ -275,7 +265,13 @@ export const ListingsPage = () => {
               <ListingCard
                 key={item.listing_id}
                 item={item}
-                onSelect={setSelectedListing}
+                onSelect={(selectedItem) => {
+                  if (onSelectListing) {
+                    onSelectListing(selectedItem);
+                  } else {
+                    window.location.hash = `#/listings/${selectedItem.listing_id}`;
+                  }
+                }}
               />
             ))}
           </div>
@@ -307,14 +303,6 @@ export const ListingsPage = () => {
             </button>
           </div>
         </>
-      )}
-
-      {/* Property Detail Modal */}
-      {selectedListing && (
-        <ListingModal
-          item={selectedListing}
-          onClose={() => setSelectedListing(null)}
-        />
       )}
 
     </div>

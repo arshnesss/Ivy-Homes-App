@@ -24,8 +24,17 @@ export const ListingCard = ({ item, onSelect, isRental = false }) => {
     ? Math.round(item.price / item.carpet_area) 
     : null;
 
+  const handleClick = (e) => {
+    if (onSelect) {
+      onSelect(item);
+    } else {
+      const prefix = isRental ? '#/rentals/' : '#/listings/';
+      window.location.hash = `${prefix}${item.listing_id}`;
+    }
+  };
+
   return (
-    <div className="property-card animate-fade-in">
+    <div className="property-card animate-fade-in" onClick={handleClick} style={{ cursor: 'pointer' }}>
       {/* Top badges & Save button */}
       <div className="property-header">
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
@@ -74,8 +83,8 @@ export const ListingCard = ({ item, onSelect, isRental = false }) => {
         </button>
       </div>
 
-      {/* Main content click target */}
-      <div onClick={() => onSelect && onSelect(item)} style={{ cursor: 'pointer', flex: 1 }}>
+      {/* Main content */}
+      <div style={{ flex: 1 }}>
         <div className="property-price">{priceFormatted}</div>
 
         <h3 className="property-title" style={{ marginBottom: 4 }}>
