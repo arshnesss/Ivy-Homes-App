@@ -94,20 +94,29 @@ export const InsightsPage = () => {
   const findingsList = [
     { id: 1, category: 'auth', endpoint: '*', doc: 'Pass API key as query parameter ?api_key=IVY26...', actual: 'Query parameter returns 401. Header X-API-Key is mandatory.' },
     { id: 2, category: 'auth', endpoint: '/auth/login', doc: 'Returns token, expires_in 86400 (24h), user name, no refresh flow', actual: 'Returns access_token, refresh_token, refresh_url, expires_in 900 (15m), user (no name)' },
-    { id: 3, category: 'auth', endpoint: '/v1/listings', doc: 'Requires only API key', actual: 'Returns 401 missing bearer token if Authorization Bearer header is omitted' },
-    { id: 4, category: 'pagination', endpoint: '/v1/listings', doc: '1-indexed page parameter, limit max 200, envelope page & page_size', actual: '0-indexed offset parameter, limit capped at 50, envelope offset & limit' },
-    { id: 5, category: 'completeness', endpoint: '/v1/listings', doc: 'total in envelope reflects exact retrievable count', actual: 'Listings total reports 4907 but yields 4950; rentals reports 2020 but yields 2050; projects reports 568 but yields 590' },
-    { id: 6, category: 'missing_endpoint', endpoint: '/v1/analytics/summary', doc: 'Pre-computed aggregate statistics for city', actual: 'Endpoint returns HTTP 404 Not Found' },
-    { id: 7, category: 'missing_endpoint', endpoint: '/v1/favourites', doc: 'GET, POST, DELETE user saved listings', actual: 'Endpoint returns HTTP 404 Not Found' },
-    { id: 8, category: 'filters', endpoint: '/v1/listings', doc: 'project_id parameter filters listings by project', actual: 'project_id parameter is quietly ignored by server' },
-    { id: 9, category: 'sorting', endpoint: '/v1/listings', doc: 'sort_by=carpet_area sorts numerically by sqft', actual: 'sort_by=carpet_area performs string lexicographical sorting (e.g. "340" before "32")' },
-    { id: 10, category: 'units', endpoint: '/v1/projects', doc: 'price_min and price_max are in Rupees (INR)', actual: 'price_min and price_max are in Crores of INR (e.g. 12.44 Cr = 124,400,000 INR)' },
-    { id: 11, category: 'consistency', endpoint: '/v1/projects', doc: 'total_listings is recomputed and agrees with listings count', actual: '443 out of 590 projects report an incorrect total_listings count' },
-    { id: 12, category: 'timestamps', endpoint: '*', doc: 'Timestamps are ISO 8601 with UTC Z suffix', actual: 'Timestamps are naive ISO strings without Z suffix or timezone offset' },
-    { id: 13, category: 'duplicates', endpoint: '/v1/listings', doc: 'Each listing_id corresponds to 1 physical property', actual: '19 duplicate clusters (38 records) describe identical physical properties across agencies' },
-    { id: 14, category: 'data_quality', endpoint: '/v1/listings', doc: 'Invalid or corrupt listings excluded server-side', actual: '41 listing records contain physical impossibilities (floor > total_floors, negative prices, swapped lat/long)' },
-    { id: 15, category: 'fraud', endpoint: '/v1/listings', doc: 'Contains genuine sale listings', actual: '11 bait/fake listings have monthly rental amounts listed as sale prices' },
-    { id: 16, category: 'missing_endpoint', endpoint: '/v1/listings/{id}/similar', doc: 'GET /v1/listings/{id}/similar returns up to 10 comparable listings', actual: 'Endpoint returns HTTP 404 Not Found for all listing IDs' }
+    { id: 3, category: 'auth', endpoint: '/auth/login', doc: 'Login response user object includes name field: "Demo User"', actual: 'User object returns only {"email": "..."}, completely omitting the "name" property' },
+    { id: 4, category: 'auth', endpoint: '/auth/logout', doc: 'POST /auth/logout invalidates token server-side', actual: 'Server responds "tokens are stateless; discard them client side" — no server invalidation exists' },
+    { id: 5, category: 'auth', endpoint: '/v1/listings', doc: 'Requires only API key', actual: 'Returns 401 missing bearer token if Authorization Bearer header is omitted' },
+    { id: 6, category: 'pagination', endpoint: '/v1/listings', doc: '1-indexed page parameter, limit max 200, envelope page & page_size', actual: '0-indexed offset parameter, limit capped at 50, envelope offset & limit' },
+    { id: 7, category: 'completeness', endpoint: '/v1/listings', doc: 'total in envelope reflects exact retrievable count', actual: 'Listings total reports 4907 but yields 4950; rentals reports 2020 but yields 2050; projects reports 568 but yields 590' },
+    { id: 8, category: 'completeness', endpoint: '/v1/listings', doc: 'Inactive and withdrawn listings excluded server-side', actual: 'Endpoint returns 1,058 inactive/archived listings where is_live: false' },
+    { id: 9, category: 'schema', endpoint: '/v1/listings', doc: 'Listing & rental schemas documented without is_live attribute', actual: 'Both listing and rental records contain an undocumented boolean "is_live" property' },
+    { id: 10, category: 'missing_endpoint', endpoint: '/v1/analytics/summary', doc: 'Pre-computed aggregate statistics for city', actual: 'Endpoint returns HTTP 404 Not Found' },
+    { id: 11, category: 'missing_endpoint', endpoint: '/v1/favourites', doc: 'GET, POST, DELETE user saved listings', actual: 'Endpoint returns HTTP 404 Not Found' },
+    { id: 12, category: 'endpoints', endpoint: '/v1/listing/{id}', doc: 'Singular GET /v1/listing/{listing_id} returns a single listing', actual: 'Singular route returns HTTP 404 Not Found; actual working route is plural /v1/listings/{id}' },
+    { id: 13, category: 'missing_endpoint', endpoint: '/v1/listings/{id}/similar', doc: 'GET /v1/listings/{id}/similar returns up to 10 comparable listings', actual: 'Endpoint returns HTTP 404 Not Found for all listing IDs' },
+    { id: 14, category: 'filters', endpoint: '/v1/listings', doc: 'project_id parameter filters listings by project', actual: 'project_id parameter is quietly ignored by server' },
+    { id: 15, category: 'filters', endpoint: '/v1/rentals', doc: 'GET /v1/rentals filters rental listings by specified criteria', actual: 'Parameters property_type, min_price, and max_price are silently ignored on rentals endpoint' },
+    { id: 16, category: 'sorting', endpoint: '/v1/listings', doc: 'sort_by=carpet_area sorts numerically by sqft', actual: 'sort_by=carpet_area performs string lexicographical sorting (e.g. "340" before "32")' },
+    { id: 17, category: 'sorting', endpoint: '/v1/rentals', doc: 'GET /v1/rentals supports sorting by monthly rent', actual: 'Calling GET /v1/rentals?sort_by=rent returns HTTP 400 {"detail": "cannot sort by \'rent\'"}' },
+    { id: 18, category: 'units', endpoint: '/v1/projects', doc: 'price_min and price_max are in Rupees (INR) as integers', actual: 'price_min and price_max are floating-point Crores of INR (e.g. 12.44 Cr = 124,400,000 INR)' },
+    { id: 19, category: 'consistency', endpoint: '/v1/projects', doc: 'total_listings is recomputed and agrees with listings count', actual: '443 out of 590 projects report an incorrect total_listings count' },
+    { id: 20, category: 'timestamps', endpoint: '*', doc: 'Timestamps are ISO 8601 with UTC Z suffix', actual: 'Timestamps are naive ISO strings without Z suffix or timezone offset' },
+    { id: 21, category: 'duplicates', endpoint: '/v1/listings', doc: 'Each listing_id corresponds to 1 physical property', actual: '19 duplicate clusters (38 records) describe identical physical properties across agencies' },
+    { id: 22, category: 'data_quality', endpoint: '/v1/listings', doc: 'Invalid or corrupt listings excluded server-side', actual: '41 listing records contain physical impossibilities (floor > total_floors, negative prices, swapped lat/long)' },
+    { id: 23, category: 'data_quality', endpoint: '/v1/listings', doc: 'is_verified means operations team checked the listing', actual: '6 listings with negative prices (down to -₹6.46 Cr) have is_verified: true, revealing unvalidated flag' },
+    { id: 24, category: 'data_quality', endpoint: '/v1/listings', doc: 'posted_by_contact is seller\'s verified contact number', actual: 'All 856 phone numbers use unallocated dummy "+91200..." numbers that cannot connect' },
+    { id: 25, category: 'fraud', endpoint: '/v1/listings', doc: 'Contains genuine sale listings', actual: '11 bait/fake listings have monthly rental amounts listed as sale prices' }
   ];
 
   return (
@@ -192,7 +201,7 @@ export const InsightsPage = () => {
           }}
         >
           <ShieldCheck size={16} />
-          <span>API Documentation Discrepancies (16)</span>
+          <span>API Documentation Discrepancies (25)</span>
         </button>
 
         <button

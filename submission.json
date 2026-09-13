@@ -101,6 +101,24 @@
       "evidence": []
     },
     {
+      "endpoint": "/auth/login",
+      "category": "auth",
+      "documented": "Login response returns user object with 'name': 'Demo User'.",
+      "actual": "Login response user object returns only {'email': '...'}, omitting 'name' completely.",
+      "how_found": "Inspected response body of POST /auth/login.",
+      "impact": "Frontend code accessing user.name receives undefined unless a fallback or email-derived display name is used.",
+      "evidence": []
+    },
+    {
+      "endpoint": "/auth/logout",
+      "category": "auth",
+      "documented": "POST /auth/logout invalidates the current token server side.",
+      "actual": "POST /auth/logout returns {'ok': true, 'note': 'tokens are stateless; discard them client side'}. The server maintains no token blacklist and tokens remain valid until expiration.",
+      "how_found": "Sent POST /auth/logout and reused bearer token on subsequent GET /v1/listings request.",
+      "impact": "Client-side logout must explicitly clear cached tokens from localStorage and memory as server-side invalidation is a no-op.",
+      "evidence": []
+    },
+    {
       "endpoint": "/v1/listings",
       "category": "auth",
       "documented": "Collection endpoints require only your city-scoped API key.",
@@ -145,6 +163,36 @@
       ]
     },
     {
+      "endpoint": "/v1/listings",
+      "category": "completeness",
+      "documented": "Returns active sale listings in your city. Inactive, expired and withdrawn listings are excluded server side.",
+      "actual": "Endpoint returns 1,058 inactive/archived listings with is_live: false. Inactive listings are not excluded server side.",
+      "how_found": "Inspected is_live boolean across all 4,950 returned records (3,892 live vs 1,058 inactive).",
+      "impact": "Clients that do not filter by is_live will show sold, expired, or withdrawn properties to end users.",
+      "evidence": [
+        "100-5000004",
+        "100-5000010",
+        "100-5000016",
+        "100-5000021",
+        "100-5000028"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings",
+      "category": "schema",
+      "documented": "Listing and rental schemas document fields without an 'is_live' property.",
+      "actual": "Both listing and rental records contain an undocumented 'is_live' boolean flag denoting listing active status.",
+      "how_found": "Examined object keys on returned listing and rental records.",
+      "impact": "Developers unaware of is_live cannot distinguish between active and inactive properties.",
+      "evidence": [
+        "100-5000042",
+        "R5000001",
+        "DWE-5000518",
+        "MAG-5000193",
+        "ZER-5001536"
+      ]
+    },
+    {
       "endpoint": "/v1/analytics/summary",
       "category": "missing_endpoint",
       "documented": "GET /v1/analytics/summary returns pre-computed aggregate statistics for your city.",
@@ -163,6 +211,32 @@
       "evidence": []
     },
     {
+      "endpoint": "/v1/listing/{listing_id}",
+      "category": "endpoints",
+      "documented": "GET /v1/listing/{listing_id} (singular) returns a single property listing.",
+      "actual": "GET /v1/listing/{listing_id} returns HTTP 404 {'detail': 'Not Found'}. The actual working route is plural: GET /v1/listings/{listing_id}.",
+      "how_found": "Sent request to GET /v1/listing/100-5000042 and compared with GET /v1/listings/100-5000042.",
+      "impact": "Following the documented singular path results in 404 errors on all single property detail lookups.",
+      "evidence": [
+        "100-5000042",
+        "DWE-5000518",
+        "MAG-5000193"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings/{listing_id}/similar",
+      "category": "missing_endpoint",
+      "documented": "GET /v1/listings/{listing_id}/similar returns up to ten comparable listings in the same locality.",
+      "actual": "GET /v1/listings/{listing_id}/similar returns HTTP 404 {'detail': 'Not Found'} for all listing IDs.",
+      "how_found": "Called GET /v1/listings/{listing_id}/similar across multiple listing IDs.",
+      "impact": "Property detail pages cannot fetch server-side similar listings strip and must calculate fallback recommendations client-side.",
+      "evidence": [
+        "100-5000042",
+        "100-5003364",
+        "DWE-5000518"
+      ]
+    },
+    {
       "endpoint": "/v1/listings",
       "category": "filters",
       "documented": "GET /v1/listings?project_id=P... filters listings belonging to a specific builder project.",
@@ -175,6 +249,19 @@
         "P50003",
         "P50004",
         "P50005"
+      ]
+    },
+    {
+      "endpoint": "/v1/rentals",
+      "category": "filters",
+      "documented": "GET /v1/rentals filters rental listings by specified criteria.",
+      "actual": "Query parameters 'property_type', 'min_price', and 'max_price' are silently ignored on /v1/rentals, returning all 2020 rental listings without filtering.",
+      "how_found": "Queried /v1/rentals?property_type=villa and /v1/rentals?min_price=100000 and observed unchanged envelope total of 2020 with apartments and cheap rentals returned.",
+      "impact": "Client applications must implement client-side filtering for rental property types and price ranges.",
+      "evidence": [
+        "R5000001",
+        "R5000002",
+        "R5000003"
       ]
     },
     {
@@ -193,10 +280,19 @@
       ]
     },
     {
+      "endpoint": "/v1/rentals",
+      "category": "sorting",
+      "documented": "GET /v1/rentals supports sort_by and Question 5 asks for monthly rent.",
+      "actual": "Calling GET /v1/rentals?sort_by=rent fails with HTTP 400 {'detail': \"cannot sort by 'rent'\"}. The field is named 'price'.",
+      "how_found": "Attempted to sort rentals by sort_by=rent.",
+      "impact": "Developers attempting to sort by the natural entity name 'rent' encounter 400 Bad Request errors.",
+      "evidence": []
+    },
+    {
       "endpoint": "/v1/projects",
       "category": "units",
-      "documented": "price_min and price_max fields in builder projects represent price in Indian Rupees (INR).",
-      "actual": "price_min and price_max in /v1/projects represent prices in Crores of INR (e.g., price_max 12.44 represents 12.44 Crores = 124,400,000 INR).",
+      "documented": "price_min and price_max fields in builder projects represent price in Indian Rupees (INR) as integers.",
+      "actual": "price_min and price_max in /v1/projects are floating-point numbers representing prices in Crores of INR (e.g., price_max 12.44 represents 12.44 Crores = 124,400,000 INR).",
       "how_found": "Compared project price_max (12.44) with actual listing prices (46,110,000 INR) for project P50016.",
       "impact": "Unconverted project prices show as single/double digit numbers (e.g. Rs 12 instead of Rs 12.44 Cr) unless multiplied by 10,000,000.",
       "evidence": [
@@ -299,6 +395,37 @@
     },
     {
       "endpoint": "/v1/listings",
+      "category": "data_quality",
+      "documented": "is_verified means our operations team has checked the listing.",
+      "actual": "Multiple listings with physically impossible and corrupt data (such as negative prices ranging from -1.4 Cr to -6.4 Cr) have is_verified: true, showing the verification flag is unvalidated.",
+      "how_found": "Cross-referenced corrupt negative-price listings against the is_verified attribute.",
+      "impact": "Users relying on is_verified as a trust signal are exposed to blatant data corruptions.",
+      "evidence": [
+        "100-5003914",
+        "100-5002758",
+        "MAG-5002204",
+        "DWE-5000518",
+        "100-5003364",
+        "MAG-5001874"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings",
+      "category": "data_quality",
+      "documented": "posted_by_contact is the seller's verified contact number.",
+      "actual": "All 856 unique seller phone numbers across listings use the fictitious unallocated prefix '+91200...', which are not real or verified Indian mobile numbers.",
+      "how_found": "Validated phone number formats against Indian telecom E.164 allocation standards.",
+      "impact": "Clicking or calling seller contact numbers fails to connect to actual home sellers.",
+      "evidence": [
+        "100-5000042",
+        "DWE-5000518",
+        "MAG-5000193",
+        "SQU-5000538",
+        "ZER-5001536"
+      ]
+    },
+    {
+      "endpoint": "/v1/listings",
       "category": "fraud",
       "documented": "/v1/listings contains genuine property sale listings.",
       "actual": "11 listing records are bait/fake listings where monthly rental amounts (Rs 17,470 - Rs 44,440 total price) are listed as sale property prices to generate enquiries.",
@@ -317,15 +444,6 @@
         "ZER-5001089",
         "ZER-5001249"
       ]
-    },
-    {
-      "endpoint": "/v1/listings/{id}/similar",
-      "category": "missing_endpoint",
-      "documented": "GET /v1/listings/{listing_id}/similar returns up to ten comparable listings in the same locality.",
-      "actual": "GET /v1/listings/{listing_id}/similar returns HTTP 404 {'detail': 'Not Found'} for all listing IDs.",
-      "how_found": "Called GET /v1/listings/{listing_id}/similar across multiple listing IDs.",
-      "impact": "Property detail pages cannot fetch server-side similar listings strip and must calculate fallback recommendations client-side.",
-      "evidence": []
     }
   ]
 }
